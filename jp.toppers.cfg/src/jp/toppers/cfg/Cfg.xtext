@@ -1,0 +1,9 @@
+grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
+
+generate cfg "http://www.toppers.jp/cfg/Cfg"
+
+Model:
+	greetings+=Greeting*;
+	
+Greeting:
+	'Hello' name=ID '!';
