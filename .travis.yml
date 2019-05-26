@@ -2,5 +2,5 @@ language: java
 jdk:
 - oraclejdk8
 script:
-- mvn -f pom.xml clean verify
+- mvn -f jp.toppers.cfg.parent/pom.xml clean verify
 
