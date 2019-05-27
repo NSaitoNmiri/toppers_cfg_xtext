@@ -3,9 +3,19 @@
  */
 package jp.toppers.cfg
 
+import org.eclipse.xtext.resource.IDefaultResourceDescriptionStrategy
+import org.eclipse.xtext.scoping.IGlobalScopeProvider
+import jp.toppers.cfg.scoping.CfgGlobalScopeProvider
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
  */
 class CfgRuntimeModule extends AbstractCfgRuntimeModule {
+	 def Class<? extends IDefaultResourceDescriptionStrategy> bindIDefaultResourceDescriptionStrategy() {
+		CfgResourceDescriptionStrategy
+	}
+	
+	override Class<? extends IGlobalScopeProvider> bindIGlobalScopeProvider() {
+		CfgGlobalScopeProvider;
+	}
 }

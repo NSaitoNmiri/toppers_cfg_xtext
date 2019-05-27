@@ -7,10 +7,18 @@
   <genPackages prefix="Cfg" basePackage="jp.toppers.cfg" disposableProviderFactory="true"
       fileExtensions="cfg" ecorePackage="Cfg.ecore#/">
     <genClasses ecoreClass="Cfg.ecore#//Model">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cfg.ecore#//Model/includes"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cfg.ecore#//Model/names"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Cfg.ecore#//Model/greetings"/>
     </genClasses>
+    <genClasses ecoreClass="Cfg.ecore#//Include">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cfg.ecore#//Include/importURI"/>
+    </genClasses>
+    <genClasses ecoreClass="Cfg.ecore#//Name">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cfg.ecore#//Name/name"/>
+    </genClasses>
     <genClasses ecoreClass="Cfg.ecore#//Greeting">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Cfg.ecore#//Greeting/name"/>
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Cfg.ecore#//Greeting/name"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>

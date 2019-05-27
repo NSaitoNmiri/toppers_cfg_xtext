@@ -21,7 +21,8 @@ class CfgParsingTest {
 	@Test
 	def void loadModel() {
 		val result = parseHelper.parse('''
-			Hello Xtext!
+			def Xtext
+			Hallo Xtext!
 		''')
 		Assert.assertNotNull(result)
 		val errors = result.eResource.errors

@@ -3,7 +3,16 @@ grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
 Model:
+	includes+=Include*
+	names+=Name*
 	greetings+=Greeting*;
-	
+
+Include:
+	'import' importURI=STRING;
+
+Name:
+	'def' name=ID;
+
 Greeting:
-	'Hello' name=ID '!';
+	'Hallo' name=[Name] '!'
+	;
