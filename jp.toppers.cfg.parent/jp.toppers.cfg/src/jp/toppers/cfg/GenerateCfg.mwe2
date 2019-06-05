@@ -2,10 +2,36 @@ module jp.toppers.cfg.GenerateCfg
 
 import org.eclipse.xtext.xtext.generator.*
 import org.eclipse.xtext.xtext.generator.model.project.*
+import org.eclipse.emf.mwe.utils.DirectoryCleaner
 
 var rootPath = ".."
+var projectName = "jp.toppers.cfg"
+var runtimeProject = "../${projectName}"
 
 Workflow {
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}/src-gen"
+    }
+    
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}/model/generated"
+    }
+    
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.ide/src-gen"
+    }
+    
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.ui/src-gen"
+    }
+    
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.tests/src-gen"
+    }
+	
+    component = DirectoryCleaner {
+    	directory = "${runtimeProject}.ui.tests/src-gen"
+    }
 	
 	component = XtextGenerator {
 		configuration = {
@@ -40,7 +66,7 @@ Workflow {
 				generateStub = false
 			}
 			validator = {
-				// composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
+				composedCheck = "org.eclipse.xtext.validation.NamesAreUniqueValidator"
 				// Generates checks for @Deprecated grammar annotations, an IssueProvider and a corresponding PropertyPage
 				generateDeprecationValidation = true
 			}
