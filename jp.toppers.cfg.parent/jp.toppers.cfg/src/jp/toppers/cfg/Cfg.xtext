@@ -2,8 +2,34 @@ grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
 
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
-Model:
-	greetings+=Greeting*;
-	
-Greeting:
-	'Hello' name=ID '!';
+CfgFile:
+{CfgFile} includeLines += C_IncludeLine*;
+
+C_IncludeLine:
+	'#' 'include' headerName=C_HEADER_NAME C_NEW_LINE;
+
+terminal fragment C_NONZERO_DIGIT: '1'..'9' ;
+terminal fragment C_DIGIT: '0' | C_NONZERO_DIGIT ;
+terminal fragment C_NONDIGIT: 'a'..'z'|'A'..'Z'|'_' ;
+
+terminal fragment C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_LT_US:
+	'!' | '#' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
+	| ':' | ';' | '<' | '=' | '?' | '[' | ']' | '^' | '{' | '|' | '}' | '~'
+;
+
+terminal fragment C_CONTROL_CHARS_WITHOUT_NL:
+	'\\' ('t' | 'v' | 'f')
+;
+
+terminal fragment C_BASIC_CHARSET_WITHOUT_NL_LT:
+	C_DIGIT | C_NONDIGIT
+	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_LT_US | '"' | "'" | '\\'
+	| C_CONTROL_CHARS_WITHOUT_NL
+;
+
+// Header names
+terminal C_HEADER_NAME: ('<' C_HCHAR_SEQUENCE '>') ;
+terminal C_HCHAR_SEQUENCE: C_HCHAR+;
+terminal fragment C_HCHAR: C_BASIC_CHARSET_WITHOUT_NL_LT;
+
+terminal C_NEW_LINE: '\n' ;
