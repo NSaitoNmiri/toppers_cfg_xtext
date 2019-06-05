@@ -37,7 +37,7 @@ class CfgGlobalScopeProvider extends ImportUriGlobalScopeProvider {
 
 			def LinkedHashSet<URI> collectImportUris(Resource resource, LinkedHashSet<URI> uniqueImportURIs) {
 				val resourceDescription = descriptionManager.getResourceDescription(resource)
-				val models = resourceDescription.getExportedObjectsByType(CfgPackage.Literals.MODEL)
+				val models = resourceDescription.getExportedObjectsByType(CfgPackage.Literals.CFG_FILE)
 				
 				models.forEach[
 					val userData = getUserData(CfgResourceDescriptionStrategy.INCLUDES)
