@@ -10,7 +10,7 @@ CfgFile:
 ;
 
 C_IncludeLine:
-	'#' 'include' headerName=C_HEADER_NAME C_NEW_LINE;
+	sharp='#' 'include' headerName=C_HEADER_NAME;
 
 terminal fragment C_NONZERO_DIGIT: '1'..'9' ;
 terminal fragment C_DIGIT: '0' | C_NONZERO_DIGIT ;
@@ -42,8 +42,6 @@ terminal C_HCHAR_SEQUENCE: C_HCHAR+;
 terminal fragment C_HCHAR: C_BASIC_CHARSET_WITHOUT_NL_LT;
 terminal fragment C_QCHAR_SEQUENCE: C_QCHAR+;
 terminal fragment C_QCHAR: C_BASIC_CHARSET_WITHOUT_DQ_BS_NL | '\\';
-
-terminal C_NEW_LINE: '\n' ;
 
 DefInclude:
 	'import' importURI=STRING;

@@ -3,23 +3,49 @@
  */
 package jp.toppers.cfg.validation
 
+import com.google.inject.Inject
+import java.util.regex.Pattern
+import jp.toppers.cfg.cfg.C_IncludeLine
+import jp.toppers.cfg.cfg.CfgFile
+import jp.toppers.cfg.cfg.CfgPackage
+import org.eclipse.xtext.nodemodel.impl.RootNode
+import org.eclipse.xtext.nodemodel.util.NodeModelUtils
+import org.eclipse.xtext.resource.ILocationInFileProvider
+import org.eclipse.xtext.validation.Check
 
 /**
  * This class contains custom validation rules. 
- *
+ * 
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#validation
  */
 class CfgValidator extends AbstractCfgValidator {
-	
-//	public static val INVALID_NAME = 'invalidName'
-//
-//	@Check
-//	def checkGreetingStartsWithCapital(Greeting greeting) {
-//		if (!Character.isUpperCase(greeting.name.charAt(0))) {
-//			warning('Name should start with a capital', 
-//					CfgPackage.Literals.GREETING__NAME,
-//					INVALID_NAME)
-//		}
-//	}
-	
+
+	protected static val ISSUE_CODE_PREFIX = "jp.toppers.cfg.";
+	public static val NO_BOL_SHARP = ISSUE_CODE_PREFIX + "NoBolSharp";
+
+	@Inject extension ILocationInFileProvider
+
+	@Check
+	def checkSharpIsBeginningOfLine(C_IncludeLine line) {
+		var f = line.eContainer as CfgFile
+		var fnode = NodeModelUtils.getNode(f) as RootNode
+		var fileStr = fnode.completeContent
+		var r = line.fullTextRegion
+
+		if(r.offset > 0) {
+			var si = fileStr.lastIndexOf('\n', r.offset-1)
+			if(si < 0) {
+				si = 0
+			}
+			var substr = fileStr.substring(si, r.offset);
+			var pattern = Pattern.compile("\\S", Pattern.COMMENTS)
+			var matcher = pattern.matcher(substr)
+			if(matcher.find) {
+				error("'#' is not the beginning of line.",
+					CfgPackage.eINSTANCE.c_IncludeLine_Sharp,
+					NO_BOL_SHARP,
+					fileStr.substring(r.offset, r.offset+r.length))
+			}
+		}
+	}
 }

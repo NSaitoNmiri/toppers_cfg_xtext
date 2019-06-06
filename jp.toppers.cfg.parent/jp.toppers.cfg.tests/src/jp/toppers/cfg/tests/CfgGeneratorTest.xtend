@@ -12,13 +12,92 @@ import org.junit.runner.RunWith
 class CfgGeneratorTest {
 	@Inject extension CompilationTestHelper
 
-	// 生成されたコードが（字面の上で）期待通りかどうか
 	@Test
-	def void testGeneratedCode() {
+	def void test2_1_1_includeHeaderFile() {
+		'''
+		#include <test1.h>
+		#include <test2.h>
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		#include <test2.h>
+		''')
+	}
+
+	@Test
+	def void test2_1_2_includeHeaderFile() {
+		'''
+		#include "test1.h"
+		#include "test2.h"
+		'''.assertCompilesTo(
+		'''
+		#include "test1.h"
+		#include "test2.h"
+		''')
+	}
+
+	@Test
+	def void test2_1_3_includeHeaderFile() {
+		'''
+		#include <test1.h>
+		#include "test2.h"
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		#include "test2.h"
+		''')
+	}
+
+	@Test
+	def void test2_2_1_includeHeaderFile() {
+		'''
+		#include <test1.h>
+		
+		#include <test2.h>
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		#include <test2.h>
+		''')
+	}
+
+	@Test
+	def void test2_2_2_includeHeaderFile() {
+		'''
+		#include "test1.h"
+		
+		#include "test2.h"
+		'''.assertCompilesTo(
+		'''
+		#include "test1.h"
+		#include "test2.h"
+		''')
+	}
+
+	@Test
+	def void test4_1_includeHeaderFile() {
 		'''
 		#include <test1.h>
 		#include "test2.h"
 		#include <test3.h>
+		#include "test4.h"
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		#include "test2.h"
+		#include <test3.h>
+		#include "test4.h"
+		''')
+	}
+
+	@Test
+	def void test4_2_includeHeaderFile() {
+		'''
+		#include <test1.h>
+
+		#include "test2.h"
+		#include <test3.h>
+
 		#include "test4.h"
 		'''.assertCompilesTo(
 		'''

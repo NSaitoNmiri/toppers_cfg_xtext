@@ -73,6 +73,25 @@ class CfgParsingTest {
 	}
 
 	@Test
+	def void test2_2_IncludeTwoHHeaderFile() {
+		val cfgFile = '''
+			#include <test1.h>
+			
+			#include <test2.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line1.headerName, "<test1.h>");
+		var line2 = cfgFile.includeLines.get(1)
+		Assert.assertEquals(line2.headerName, "<test2.h>");
+	}
+
+
+	@Test
 	def void test4_1_IncludeFourHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
