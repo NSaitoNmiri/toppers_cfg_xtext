@@ -24,11 +24,11 @@ class CfgParsingTest {
 		var cfgFile = ''''''.parse
 		Assert.assertNotNull(cfgFile)
 		cfgFile.assertNoErrors
-		Assert.assertEquals(0, cfgFile.includeLines.length)
+		Assert.assertEquals(0, cfgFile.c_includeLines.length)
 	}
 
 	@Test
-	def void test1_1_IncludeOneHHeaderFile() {
+	def void test1_1_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 		'''.parse
@@ -37,12 +37,12 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, "<test1.h>");
+		var line = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.h>");
 	}
 	
 	@Test
-	def void test1_2_IncludeOneHHeaderFile() {
+	def void test1_2_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <'>
 		'''.parse
@@ -51,12 +51,12 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, "<'>");
+		var line = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line.name, "<'>");
 	}
 
 	@Test
-	def void test2_1_IncludeTwoHHeaderFile() {
+	def void test2_1_C_IncludeTwoHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			#include <test2.h>
@@ -66,14 +66,14 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
+		var line1 = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.h>");
+		var line2 = cfgFile.c_includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
 	@Test
-	def void test2_2_IncludeTwoHHeaderFile() {
+	def void test2_2_C_IncludeTwoHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			
@@ -84,15 +84,15 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
+		var line1 = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.h>");
+		var line2 = cfgFile.c_includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
 
 	@Test
-	def void test4_1_IncludeFourHHeaderFile() {
+	def void test4_1_C_IncludeFourHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			#include <test2.h>
@@ -104,18 +104,18 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
-		var line3 = cfgFile.includeLines.get(2)
-		Assert.assertEquals(line3.headerName, "<test3.h>");
-		var line4 = cfgFile.includeLines.get(3)
-		Assert.assertEquals(line4.headerName, "<test4.h>");
+		var line1 = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.h>");
+		var line2 = cfgFile.c_includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.h>");
+		var line3 = cfgFile.c_includeLines.get(2)
+		Assert.assertEquals(line3.name, "<test3.h>");
+		var line4 = cfgFile.c_includeLines.get(3)
+		Assert.assertEquals(line4.name, "<test4.h>");
 	}
 
 	@Test
-	def void test_Err_1_1_IncludeOneHHeaderFile() {
+	def void test_Err_1_1_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include test1.h
 		'''.parse
@@ -125,7 +125,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_2_IncludeOneHHeaderFile() {
+	def void test_Err_1_2_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h
 		'''.parse
@@ -135,7 +135,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_3_IncludeOneHHeaderFile() {
+	def void test_Err_1_3_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include test1.h>
 		'''.parse
@@ -145,7 +145,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_4_IncludeOneHHeaderFile() {
+	def void test_Err_1_4_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <>
 		'''.parse
@@ -155,7 +155,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_5_IncludeOneHHeaderFile() {
+	def void test_Err_1_5_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <>>
 		'''.parse
@@ -165,7 +165,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_1_IncludeOneQHeaderFile() {
+	def void test1_1_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 		'''.parse
@@ -174,12 +174,12 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, '"test1.h"');
+		var line = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line.name, '"test1.h"');
 	}
 	
 	@Test
-	def void test1_2_IncludeOneQHeaderFile() {
+	def void test1_2_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include "<"
 		'''.parse
@@ -188,12 +188,12 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, '"<"');
+		var line = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line.name, '"<"');
 	}
 
 	@Test
-	def void test2_1_IncludeTwoQHeaderFile() {
+	def void test2_1_C_IncludeTwoQHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 			#include "test2.h"
@@ -203,14 +203,14 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, '"test1.h"');
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, '"test2.h"');
+		var line1 = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line1.name, '"test1.h"');
+		var line2 = cfgFile.c_includeLines.get(1)
+		Assert.assertEquals(line2.name, '"test2.h"');
 	}
 
 	@Test
-	def void test4_1_IncludeFourQHeaderFile() {
+	def void test4_1_C_IncludeFourQHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 			#include "test2.h"
@@ -222,18 +222,18 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, '"test1.h"');
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, '"test2.h"');
-		var line3 = cfgFile.includeLines.get(2)
-		Assert.assertEquals(line3.headerName, '"test3.h"');
-		var line4 = cfgFile.includeLines.get(3)
-		Assert.assertEquals(line4.headerName, '"test4.h"');
+		var line1 = cfgFile.c_includeLines.get(0)
+		Assert.assertEquals(line1.name, '"test1.h"');
+		var line2 = cfgFile.c_includeLines.get(1)
+		Assert.assertEquals(line2.name, '"test2.h"');
+		var line3 = cfgFile.c_includeLines.get(2)
+		Assert.assertEquals(line3.name, '"test3.h"');
+		var line4 = cfgFile.c_includeLines.get(3)
+		Assert.assertEquals(line4.name, '"test4.h"');
 	}
 
 	@Test
-	def void test_Err_1_2_IncludeOneQHeaderFile() {
+	def void test_Err_1_2_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h
 		'''.parse
@@ -243,7 +243,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_3_IncludeOneQHeaderFile() {
+	def void test_Err_1_3_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include test1.h"
 		'''.parse
@@ -253,7 +253,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_4_IncludeOneQHeaderFile() {
+	def void test_Err_1_4_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include ""
 		'''.parse
@@ -263,13 +263,81 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_5_IncludeOneQHeaderFile() {
+	def void test_Err_1_5_C_IncludeOneQHeaderFile() {
 		val cfgFile = '''
 			#include """
 		'''.parse
 
 		val errors = cfgFile.eResource.errors
 		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test1_1_Include() {
+		val cfgFile = '''
+			INCLUDE("test1.cfg");
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, '"test1.cfg"');
+	}
+
+	@Test
+	def void test1_2_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test2_1_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>);
+			INCLUDE(<test2.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.cfg>");
+		var line2 = cfgFile.includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.cfg>");
+	}
+
+	@Test
+	def void test4_1_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>);
+			INCLUDE(<test2.cfg>);
+			INCLUDE(<test3.cfg>);
+			INCLUDE(<test4.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.cfg>");
+		var line2 = cfgFile.includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.cfg>");
+		var line3 = cfgFile.includeLines.get(2)
+		Assert.assertEquals(line3.name, "<test3.cfg>");
+		var line4 = cfgFile.includeLines.get(3)
+		Assert.assertEquals(line4.name, "<test4.cfg>");
 	}
 
 }

@@ -58,31 +58,20 @@ class CfgValidator extends AbstractCfgValidator {
 		var r = line.fullTextRegion
 
 		var lendOffs = r.offset + r.length
-		try {
-			if(lendOffs < fileStr.length()) {
-				var si = fileStr.indexOf('\n', lendOffs)
-				if (si < 0) {
-					throw new Exception
-				}
-				else {
-					var substr = fileStr.substring(lendOffs, si);
-					var pattern = Pattern.compile("\\S", Pattern.COMMENTS)
-					var matcher = pattern.matcher(substr)
-					if(matcher.find) {
-						throw new Exception
-					}
+		if(lendOffs < fileStr.length()) {
+			var si = fileStr.indexOf('\n', lendOffs)
+			if (si >= 0) {
+				var substr = fileStr.substring(lendOffs, si);
+				var pattern = Pattern.compile("\\S", Pattern.COMMENTS)
+				var matcher = pattern.matcher(substr)
+				if(!matcher.find) {
+					return
 				}
 			}
-			else {
-				throw new Exception
-			}
 		}
-		catch(Exception e){
-			error("new-line charactor is required at the end of C preprosessor directives.",
-				CfgPackage.eINSTANCE.c_IncludeLine_HeaderName,
-				NO_EOL_NL,
-				fileStr.substring(r.offset, r.length))
-			
-		}
-	}
+		error("new-line charactor is required at the end of C preprosessor directives.",
+			CfgPackage.eINSTANCE.c_IncludeLine_Name,
+			NO_EOL_NL,
+			fileStr.substring(r.offset, r.offset+r.length))
+	}	
 }

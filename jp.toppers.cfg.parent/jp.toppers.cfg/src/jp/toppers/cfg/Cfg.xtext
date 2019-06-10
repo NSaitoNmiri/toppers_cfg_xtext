@@ -2,11 +2,17 @@ grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
 
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
-CfgFile:
-{CfgFile} includeLines += C_IncludeLine*;
+CfgFile: {CfgFile} (
+	c_includeLines += C_IncludeLine
+	| includeLines += IncludeLine
+)* ;
+
+IncludeLine:
+	'INCLUDE' '(' name=C_HEADER_NAME ')' ';'
+;
 
 C_IncludeLine:
-	sharp='#' 'include' headerName=C_HEADER_NAME;
+	sharp='#' 'include' name=C_HEADER_NAME;
 
 terminal fragment C_NONZERO_DIGIT: '1'..'9' ;
 terminal fragment C_DIGIT: '0' | C_NONZERO_DIGIT ;

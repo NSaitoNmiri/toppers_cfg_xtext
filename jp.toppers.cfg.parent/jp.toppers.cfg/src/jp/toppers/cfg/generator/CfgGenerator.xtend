@@ -19,7 +19,7 @@ class CfgGenerator extends AbstractGenerator {
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		fsa.generateFile("kernel_cfg.c",'''
 			«FOR i: resource.allContents.toIterable.filter(C_IncludeLine)»
-				#include «i.headerName»
+				#include «i.name»
 			«ENDFOR»
 			''')
 	}
