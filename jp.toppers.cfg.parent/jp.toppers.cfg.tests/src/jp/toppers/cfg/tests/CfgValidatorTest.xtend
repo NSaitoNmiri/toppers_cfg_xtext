@@ -18,6 +18,18 @@ class CfgValidatorTest {
 	@Inject extension ValidationTestHelper
 	
 	@Test
+	def void test1_1_NlIsNotEol() {
+		'''#include <test1.h>'''.parse.assertNlIsNotEol
+	}
+
+	@Test
+	def void test1_2_NlIsNotEol() {
+		'''#include <test1.h> foo
+		'''.parse.assertNlIsNotEol
+	}
+
+
+	@Test
 	def void test2_1_SharpIsNotBol() {
 		'''
 		#include <test1.h>#include <test2.h>
@@ -32,6 +44,25 @@ class CfgValidatorTest {
 		)
 	}
 
+	def private void assertNlIsNotEol(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgValidator.NO_EOL_NL,
+			"new-line charactor is required at the end of C preprosessor directives."
+		)
+	}
+
+	@Test
+	def void test1_2_NlIsNotEol_ErrorPosition() {
+		val testInput ='''#include <test1.h>'''
+
+		testInput.parse.assertError(
+			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgValidator.NO_EOL_NL,
+			testInput.indexOf("<"),  // offset
+			"<test1.h>".length      // length
+		)
+	}
 	@Test
 	def void test2_2_SharpIsNotBol_ErrorPosition() {
 		val testInput =

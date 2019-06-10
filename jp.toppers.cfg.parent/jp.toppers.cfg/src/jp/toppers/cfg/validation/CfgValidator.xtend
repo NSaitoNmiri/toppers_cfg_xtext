@@ -22,7 +22,8 @@ class CfgValidator extends AbstractCfgValidator {
 
 	protected static val ISSUE_CODE_PREFIX = "jp.toppers.cfg.";
 	public static val NO_BOL_SHARP = ISSUE_CODE_PREFIX + "NoBolSharp";
-
+	public static val NO_EOL_NL = ISSUE_CODE_PREFIX + "NoEolNl";
+	
 	@Inject extension ILocationInFileProvider
 
 	@Check
@@ -46,6 +47,42 @@ class CfgValidator extends AbstractCfgValidator {
 					NO_BOL_SHARP,
 					fileStr.substring(r.offset, r.offset+r.length))
 			}
+		}
+	}
+	
+	@Check
+	def checkNewLineIsEndOfLine(C_IncludeLine line) {
+		var f = line.eContainer as CfgFile
+		var fnode = NodeModelUtils.getNode(f) as RootNode
+		var fileStr = fnode.completeContent
+		var r = line.fullTextRegion
+
+		var lendOffs = r.offset + r.length
+		try {
+			if(lendOffs < fileStr.length()) {
+				var si = fileStr.indexOf('\n', lendOffs)
+				if (si < 0) {
+					throw new Exception
+				}
+				else {
+					var substr = fileStr.substring(lendOffs, si);
+					var pattern = Pattern.compile("\\S", Pattern.COMMENTS)
+					var matcher = pattern.matcher(substr)
+					if(matcher.find) {
+						throw new Exception
+					}
+				}
+			}
+			else {
+				throw new Exception
+			}
+		}
+		catch(Exception e){
+			error("new-line charactor is required at the end of C preprosessor directives.",
+				CfgPackage.eINSTANCE.c_IncludeLine_HeaderName,
+				NO_EOL_NL,
+				fileStr.substring(r.offset, r.length))
+			
 		}
 	}
 }
