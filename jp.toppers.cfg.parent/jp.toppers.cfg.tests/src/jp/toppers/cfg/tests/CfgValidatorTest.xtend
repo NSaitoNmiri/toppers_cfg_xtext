@@ -28,6 +28,12 @@ class CfgValidatorTest {
 		'''.parse.assertNlIsNotEol
 	}
 
+	@Test
+	def void test1_3_C_Include_NlIsNotEol() {
+		'''#include <test1.h>INCLUDE("test2.h");
+		'''.parse.assertNlIsNotEol
+	}
+
 
 	@Test
 	def void test2_1_C_Include_SharpIsNotBol() {

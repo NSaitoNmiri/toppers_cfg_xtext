@@ -4,7 +4,12 @@ generate cfg "http://www.toppers.jp/cfg/Cfg"
 
 CfgFile: {CfgFile} (
 	c_includeLines += C_IncludeLine
+	| includeLines += IncludeLine
 )* ;
+
+IncludeLine:
+	'INCLUDE' '(' name=C_HEADER_NAME ')' ';'
+;
 
 C_IncludeLine:
 	sharp='#' 'include' name=C_HEADER_NAME;
