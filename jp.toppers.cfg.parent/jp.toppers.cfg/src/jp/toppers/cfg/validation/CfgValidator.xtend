@@ -70,7 +70,7 @@ class CfgValidator extends AbstractCfgValidator {
 			}
 		}
 		error("new-line charactor is required at the end of C preprosessor directives.",
-			CfgPackage.eINSTANCE.c_IncludeLine_HeaderName,
+			CfgPackage.eINSTANCE.c_IncludeLine_Name,
 			NO_EOL_NL,
 				fileStr.substring(r.offset, r.length))
 	}	

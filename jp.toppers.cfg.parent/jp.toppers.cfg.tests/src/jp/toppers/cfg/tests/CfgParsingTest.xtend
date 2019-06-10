@@ -38,7 +38,7 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, "<test1.h>");
+		Assert.assertEquals(line.name, "<test1.h>");
 	}
 	
 	@Test
@@ -52,7 +52,7 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, "<'>");
+		Assert.assertEquals(line.name, "<'>");
 	}
 
 	@Test
@@ -67,9 +67,9 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
 		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
+		Assert.assertEquals(line1.name, "<test1.h>");
+		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
 	@Test
@@ -85,9 +85,9 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
 		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
+		Assert.assertEquals(line1.name, "<test1.h>");
+		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
 
@@ -105,13 +105,13 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, "<test1.h>");
 		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, "<test2.h>");
 		var line3 = cfgFile.includeLines.get(2)
-		Assert.assertEquals(line3.headerName, "<test3.h>");
 		var line4 = cfgFile.includeLines.get(3)
-		Assert.assertEquals(line4.headerName, "<test4.h>");
+		Assert.assertEquals(line1.name, "<test1.h>");
+		Assert.assertEquals(line2.name, "<test2.h>");
+		Assert.assertEquals(line3.name, "<test3.h>");
+		Assert.assertEquals(line4.name, "<test4.h>");
 	}
 
 	@Test
@@ -175,7 +175,7 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, '"test1.h"');
+		Assert.assertEquals(line.name, '"test1.h"');
 	}
 	
 	@Test
@@ -189,7 +189,7 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.headerName, '"<"');
+		Assert.assertEquals(line.name, '"<"');
 	}
 
 	@Test
@@ -204,9 +204,9 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, '"test1.h"');
 		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, '"test2.h"');
+		Assert.assertEquals(line1.name, '"test1.h"');
+		Assert.assertEquals(line2.name, '"test2.h"');
 	}
 
 	@Test
@@ -223,13 +223,13 @@ class CfgParsingTest {
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
 		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.headerName, '"test1.h"');
 		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.headerName, '"test2.h"');
 		var line3 = cfgFile.includeLines.get(2)
-		Assert.assertEquals(line3.headerName, '"test3.h"');
 		var line4 = cfgFile.includeLines.get(3)
-		Assert.assertEquals(line4.headerName, '"test4.h"');
+		Assert.assertEquals(line1.name, '"test1.h"');
+		Assert.assertEquals(line2.name, '"test2.h"');
+		Assert.assertEquals(line3.name, '"test3.h"');
+		Assert.assertEquals(line4.name, '"test4.h"');
 	}
 
 	@Test

@@ -6,7 +6,7 @@ CfgFile:
 {CfgFile} includeLines += C_IncludeLine*;
 
 C_IncludeLine:
-	sharp='#' 'include' headerName=C_HEADER_NAME;
+	sharp='#' 'include' name=C_HEADER_NAME;
 
 terminal fragment C_NONZERO_DIGIT: '1'..'9' ;
 terminal fragment C_DIGIT: '0' | C_NONZERO_DIGIT ;
