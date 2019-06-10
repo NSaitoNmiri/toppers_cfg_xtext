@@ -2,8 +2,9 @@ grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
 
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
-CfgFile:
-{CfgFile} includeLines += C_IncludeLine*;
+CfgFile: {CfgFile} (
+	c_includeLines += C_IncludeLine
+)* ;
 
 C_IncludeLine:
 	sharp='#' 'include' name=C_HEADER_NAME;

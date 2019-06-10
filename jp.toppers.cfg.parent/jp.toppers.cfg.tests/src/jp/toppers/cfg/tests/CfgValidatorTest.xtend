@@ -18,19 +18,19 @@ class CfgValidatorTest {
 	@Inject extension ValidationTestHelper
 	
 	@Test
-	def void test1_1_NlIsNotEol() {
+	def void test1_1_C_Include_NlIsNotEol() {
 		'''#include <test1.h>'''.parse.assertNlIsNotEol
 	}
 
 	@Test
-	def void test1_2_NlIsNotEol() {
+	def void test1_2_C_Include_NlIsNotEol() {
 		'''#include <test1.h> foo
 		'''.parse.assertNlIsNotEol
 	}
 
 
 	@Test
-	def void test2_1_SharpIsNotBol() {
+	def void test2_1_C_Include_SharpIsNotBol() {
 		'''
 		#include <test1.h>#include <test2.h>
 		'''.parse.assertSharpIsNotBol("#include <test2.h>")
@@ -53,7 +53,7 @@ class CfgValidatorTest {
 	}
 
 	@Test
-	def void test1_2_NlIsNotEol_ErrorPosition() {
+	def void test1_2_C_Include_NlIsNotEol_ErrorPosition() {
 		val testInput ='''#include <test1.h>'''
 
 		testInput.parse.assertError(
@@ -64,7 +64,7 @@ class CfgValidatorTest {
 		)
 	}
 	@Test
-	def void test2_2_SharpIsNotBol_ErrorPosition() {
+	def void test2_2_C_Include_SharpIsNotBol_ErrorPosition() {
 		val testInput =
 		'''
 		#include <test1.h>#include <test2.h>
@@ -78,7 +78,7 @@ class CfgValidatorTest {
 	}
 
 	@Test
-	def void testSharpIsBOL() {
+	def void C_Include_testSharpIsBOL() {
 		'''
 			#include <test1.h>
 			  #include <test2.h>
