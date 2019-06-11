@@ -1,5 +1,5 @@
-grammar jp.toppers.cfg.Cfg with org.eclipse.xtext.common.Terminals
-
+grammar jp.toppers.cfg.Cfg hidden(WS, ML_COMMENT, SL_COMMENT)
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
 CfgFile: {CfgFile} (
@@ -8,39 +8,39 @@ CfgFile: {CfgFile} (
 )* ;
 
 IncludeLine:
-	'INCLUDE' '(' name=C_HEADER_NAME ')' ';'
+	'INCLUDE' '(' name=C_HeaderName ')' ';'
 ;
 
 C_IncludeLine:
-	sharp='#' 'include' name=C_HEADER_NAME;
+	sharp='#' 'include' name=C_HeaderName;
 
 // header name
-terminal C_HEADER_NAME: ('<' C_HCHAR_SEQUENCE '>' | '"' C_QCHAR_SEQUENCE '"') ;
-terminal fragment C_HCHAR_SEQUENCE: C_HCHAR+;
-terminal fragment C_HCHAR: C_BASIC_CHARSET_WITHOUT_NL_LT;
-terminal fragment C_BASIC_CHARSET_WITHOUT_NL_LT:
-	C_DIGIT | C_NONDIGIT
-	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_LT_US | '"' | "'" | '\\'
-	| C_CONTROL_CHARS_WITHOUT_NL
+C_HeaderName: ('<' C_HCharSequence '>' | '"' C_QCharSequence '"') ;
+C_HCharSequence:
+	(C_DIGIT | C_NONDIGIT
+	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US | "'" | '"' | '\\'
+	| C_CONTROL_CHARS_WITHOUT_NL)+
 ;
-terminal fragment C_QCHAR_SEQUENCE: C_QCHAR+;
-terminal fragment C_QCHAR: C_BASIC_CHARSET_WITHOUT_DQ_BS_NL | '\\';
-terminal fragment C_BASIC_CHARSET_WITHOUT_DQ_BS_NL:
-	C_DIGIT | C_NONDIGIT
-	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_LT_US | "'" | '>'
-	| C_CONTROL_CHARS_WITHOUT_NL
+C_QCharSequence:
+	(C_DIGIT | C_NONDIGIT
+	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US | '<' | "'" | '>'
+	| C_CONTROL_CHARS_WITHOUT_NL)+
 ;
 
 // charactors
-terminal fragment C_NONZERO_DIGIT: '1'..'9' ;
-terminal fragment C_DIGIT: '0' | C_NONZERO_DIGIT ;
-terminal fragment C_NONDIGIT: 'a'..'z'|'A'..'Z'|'_' ;
-terminal fragment C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_LT_US:
+terminal C_DIGIT: '0'..'9' ;
+terminal C_NONDIGIT: (C_ALPHABET_LOWER|C_ALPHABET_UPPER|C_UNDERSCORE);
+terminal C_ALPHABET_LOWER: 'a'..'z' ;
+terminal C_ALPHABET_UPPER: 'A'..'Z' ;
+terminal C_UNDERSCORE: '_';
+terminal C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US:
 	'!' | '#' | '%' | '&' | '(' | ')' | '*' | '+' | ',' | '-' | '.' | '/'
-	| ':' | ';' | '<' | '=' | '?' | '[' | ']' | '^' | '{' | '|' | '}' | '~'
+	| ':' | ';' | '=' | '?' | '[' | ']' | '^' | '{' | '|' | '}' | '~'
 ;
-terminal fragment C_CONTROL_CHARS_WITHOUT_NL:
+terminal C_CONTROL_CHARS_WITHOUT_NL:
 	'\\' ('t' | 'v' | 'f')
 ;
 
-
+terminal ML_COMMENT : '/*' -> '*/';
+terminal SL_COMMENT : '//' !('\n'|'\r')* ('\r'? '\n')?;
+terminal WS         : (' '|'\t'|'\r'|'\n')+;
