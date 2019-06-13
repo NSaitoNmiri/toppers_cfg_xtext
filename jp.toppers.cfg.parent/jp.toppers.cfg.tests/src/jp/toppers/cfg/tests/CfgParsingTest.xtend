@@ -12,6 +12,7 @@ import org.eclipse.xtext.testing.validation.ValidationTestHelper
 import org.junit.Assert
 import org.junit.Test
 import org.junit.runner.RunWith
+import jp.toppers.cfg.cfg.C_IncludeLine
 
 @RunWith(XtextRunner)
 @InjectWith(CfgInjectorProvider)
@@ -24,7 +25,7 @@ class CfgParsingTest {
 		var cfgFile = ''''''.parse
 		Assert.assertNotNull(cfgFile)
 		cfgFile.assertNoErrors
-		Assert.assertEquals(0, cfgFile.c_includeLines.length)
+		Assert.assertEquals(0, cfgFile.c_directives.length())
 	}
 
 	@Test
@@ -37,7 +38,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.c_includeLines.get(0)
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
 		Assert.assertEquals(line.name, "<test1.h>");
 	}
 	
@@ -51,7 +53,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.c_includeLines.get(0)
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
 		Assert.assertEquals(line.name, "<'>");
 	}
 
@@ -66,9 +69,11 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_includeLines.get(0)
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
 		Assert.assertEquals(line1.name, "<test1.h>");
-		var line2 = cfgFile.c_includeLines.get(1)
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
 		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
@@ -84,9 +89,11 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_includeLines.get(0)
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
 		Assert.assertEquals(line1.name, "<test1.h>");
-		var line2 = cfgFile.c_includeLines.get(1)
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
 		Assert.assertEquals(line2.name, "<test2.h>");
 	}
 
@@ -104,13 +111,17 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_includeLines.get(0)
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
 		Assert.assertEquals(line1.name, "<test1.h>");
-		var line2 = cfgFile.c_includeLines.get(1)
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
 		Assert.assertEquals(line2.name, "<test2.h>");
-		var line3 = cfgFile.c_includeLines.get(2)
+		var line3 = cfgFile.c_directives.get(2).line
+		Assert.assertTrue(line3 instanceof C_IncludeLine)
 		Assert.assertEquals(line3.name, "<test3.h>");
-		var line4 = cfgFile.c_includeLines.get(3)
+		var line4 = cfgFile.c_directives.get(3).line
+		Assert.assertTrue(line4 instanceof C_IncludeLine)
 		Assert.assertEquals(line4.name, "<test4.h>");
 	}
 
@@ -174,7 +185,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.c_includeLines.get(0)
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
 		Assert.assertEquals(line.name, '"test1.h"');
 	}
 	
@@ -188,7 +200,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.c_includeLines.get(0)
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
 		Assert.assertEquals(line.name, '"<"');
 	}
 
@@ -203,9 +216,11 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_includeLines.get(0)
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
 		Assert.assertEquals(line1.name, '"test1.h"');
-		var line2 = cfgFile.c_includeLines.get(1)
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
 		Assert.assertEquals(line2.name, '"test2.h"');
 	}
 
@@ -222,13 +237,17 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_includeLines.get(0)
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
 		Assert.assertEquals(line1.name, '"test1.h"');
-		var line2 = cfgFile.c_includeLines.get(1)
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
 		Assert.assertEquals(line2.name, '"test2.h"');
-		var line3 = cfgFile.c_includeLines.get(2)
+		var line3 = cfgFile.c_directives.get(2).line
+		Assert.assertTrue(line3 instanceof C_IncludeLine)
 		Assert.assertEquals(line3.name, '"test3.h"');
-		var line4 = cfgFile.c_includeLines.get(3)
+		var line4 = cfgFile.c_directives.get(3).line
+		Assert.assertTrue(line4 instanceof C_IncludeLine)
 		Assert.assertEquals(line4.name, '"test4.h"');
 	}
 

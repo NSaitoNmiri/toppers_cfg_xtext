@@ -4,15 +4,20 @@ generate cfg "http://www.toppers.jp/cfg/Cfg"
 
 CfgFile: {CfgFile} (
 	includeLines += IncludeLine
-	| c_includeLines += C_IncludeLine
+	| c_directives += C_Directive
 )* ;
 
 IncludeLine:
 	'INCLUDE' '(' name=C_HeaderName ')' ';'
 ;
 
+// c preprocessor directives
+C_Directive:
+	sharp='#' line=C_IncludeLine
+;
+
 C_IncludeLine:
-	sharp='#' 'include' name=C_HeaderName;
+	'include' name=C_HeaderName;
 
 // header name
 C_HeaderName: ('<' C_HCharSequence '>' | '"' C_QCharSequence '"') ;

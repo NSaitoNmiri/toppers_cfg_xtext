@@ -5,7 +5,7 @@ package jp.toppers.cfg.validation
 
 import com.google.inject.Inject
 import java.util.regex.Pattern
-import jp.toppers.cfg.cfg.C_IncludeLine
+import jp.toppers.cfg.cfg.C_Directive
 import jp.toppers.cfg.cfg.CfgFile
 import jp.toppers.cfg.cfg.CfgPackage
 import org.eclipse.xtext.nodemodel.impl.RootNode
@@ -27,11 +27,11 @@ class CfgValidator extends AbstractCfgValidator {
 	@Inject extension ILocationInFileProvider
 
 	@Check
-	def checkSharpIsBeginningOfLine(C_IncludeLine line) {
-		var f = line.eContainer as CfgFile
+	def checkSharpIsBeginningOfLine(C_Directive directive) {
+		var f = directive.eContainer as CfgFile
 		var fnode = NodeModelUtils.getNode(f) as RootNode
 		var fileStr = fnode.completeContent
-		var r = line.fullTextRegion
+		var r = directive.fullTextRegion
 
 		if(r.offset > 0) {
 			var si = fileStr.lastIndexOf('\n', r.offset-1)
@@ -43,7 +43,7 @@ class CfgValidator extends AbstractCfgValidator {
 			var matcher = pattern.matcher(substr)
 			if(matcher.find) {
 				error("'#' is not the beginning of line.",
-					CfgPackage.eINSTANCE.c_IncludeLine_Sharp,
+					CfgPackage.eINSTANCE.c_Directive_Sharp,
 					NO_BOL_SHARP,
 					fileStr.substring(r.offset, r.offset+r.length))
 			}
@@ -51,11 +51,11 @@ class CfgValidator extends AbstractCfgValidator {
 	}
 	
 	@Check
-	def checkNewLineIsEndOfLine(C_IncludeLine line) {
-		var f = line.eContainer as CfgFile
+	def checkNewLineIsEndOfLine(C_Directive directive) {
+		var f = directive.eContainer as CfgFile
 		var fnode = NodeModelUtils.getNode(f) as RootNode
 		var fileStr = fnode.completeContent
-		var r = line.fullTextRegion
+		var r = directive.fullTextRegion
 
 		var lendOffs = r.offset + r.length
 		if(lendOffs < fileStr.length()) {
@@ -70,7 +70,7 @@ class CfgValidator extends AbstractCfgValidator {
 			}
 		}
 		error("new-line charactor is required at the end of C preprosessor directives.",
-			CfgPackage.eINSTANCE.c_IncludeLine_Name,
+			CfgPackage.eINSTANCE.c_Directive_Line,
 			NO_EOL_NL,
 			fileStr.substring(r.offset, r.offset+r.length))
 	}	
