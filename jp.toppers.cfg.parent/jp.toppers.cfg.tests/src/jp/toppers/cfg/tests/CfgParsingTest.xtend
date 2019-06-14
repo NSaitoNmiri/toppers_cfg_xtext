@@ -59,6 +59,21 @@ class CfgParsingTest {
 	}
 
 	@Test
+	def void test1_3_C_IncludeOneHHeaderFile() {
+		val cfgFile = '''
+			# include <test1.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
+		Assert.assertEquals(line.name, "<test1.h>");
+	}
+
+	@Test
 	def void test2_1_C_IncludeTwoHHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
@@ -169,6 +184,46 @@ class CfgParsingTest {
 	def void test_Err_1_5_C_IncludeOneHHeaderFile() {
 		val cfgFile = '''
 			#include <>>
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_6_C_IncludeOneHHeaderFile() {
+		val cfgFile = '''
+			#include<test.h>
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_7_C_IncludeOneHHeaderFile() {
+		val cfgFile = '''
+			#include < test.h>
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_8_C_IncludeOneHHeaderFile() {
+		val cfgFile = '''
+			#include <test.h >
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_9_C_IncludeOneHHeaderFile() {
+		val cfgFile = '''
+			#include <tes t.h >
 		'''.parse
 
 		val errors = cfgFile.eResource.errors
@@ -320,10 +375,82 @@ class CfgParsingTest {
 	}
 
 	@Test
+	def void test1_3_Include() {
+		val cfgFile = '''
+			INCLUDE (<test1.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test1_4_Include() {
+		val cfgFile = '''
+			INCLUDE( <test1.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test1_5_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg> );
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test1_6_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>) ;
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line.name, "<test1.cfg>");
+	}
+
+	@Test
 	def void test2_1_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>);
 			INCLUDE(<test2.cfg>);
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.includeLines.get(0)
+		Assert.assertEquals(line1.name, "<test1.cfg>");
+		var line2 = cfgFile.includeLines.get(1)
+		Assert.assertEquals(line2.name, "<test2.cfg>");
+	}
+
+	@Test
+	def void test2_2_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>);INCLUDE(<test2.cfg>);
 		'''.parse
 
 		Assert.assertNotNull(cfgFile)
@@ -359,4 +486,84 @@ class CfgParsingTest {
 		Assert.assertEquals(line4.name, "<test4.cfg>");
 	}
 
+	@Test
+	def void test_Err_1_1_Include() {
+		val cfgFile = '''
+			INCLUDE <test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_2_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>;
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_3_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>)
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_4_Include() {
+		val cfgFile = '''
+			INCLUDE((<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_5_Include() {
+		val cfgFile = '''
+			INCLUDE()<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_6_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg)>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_1_7_Include() {
+		val cfgFile = '''
+			INCLUDE
+			(<test1.cfg)>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
+
+	@Test
+	def void test_Err_2_1_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>)INCLUDE(<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertFalse(errors.isEmpty)
+	}
 }

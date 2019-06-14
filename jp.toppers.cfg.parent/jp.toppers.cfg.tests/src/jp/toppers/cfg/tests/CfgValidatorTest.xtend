@@ -90,4 +90,45 @@ class CfgValidatorTest {
 			  #include <test2.h>
 		'''.parse.assertNoErrors
 	}
+
+	@Test
+	def void test_1_2_C_Include_SharpIsBOL() {
+		'''
+			#include <test1.h>
+			
+			 #include <test2.h>
+		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_1_CDirective_ExtraNl() {
+		'''
+			#
+			 include <test1.h>
+		'''.parse.assertExtraNlIsInCDirective
+	}
+
+	def private void assertExtraNlIsInCDirective(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_Directive,
+			CfgValidator.EXTRA_NL_IN_CDIRECTIVE,
+			"extra new-line charactor is detected in C preprosessor directives."
+		)
+	}
+
+	@Test
+	def void test_1_1_CInclude_ExtraNl() {
+		'''
+			#include
+			 <test1.h>
+		'''.parse.assertExtraNlIsInCInclude
+	}
+
+	def private void assertExtraNlIsInCInclude(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgValidator.EXTRA_NL_IN_CINCLUDE,
+			"extra new-line charactor is detected in C include lines."
+		)
+	}
 }
