@@ -92,6 +92,29 @@ class CfgValidatorTest {
 		)
 	}
 
+	@Test
+	def void test_1_1_CDefine_NlIsNotEol() {
+		'''#define TEST1'''.parse.assertNlIsNotEol
+	}
+
+	@Test
+	def void test_1_2_CDefine_NlIsNotEol() {
+		'''#define TEST1 INCLUDE("test2.h");
+		'''.parse.assertNlIsNotEol
+	}
+
+	@Test
+	def void test_1_1_CDefine_NlIsNotEol_ErrPos() {
+		val testInput ='''#define TEST1'''
+
+		testInput.parse.assertError(
+			CfgPackage.eINSTANCE.c_Directive,
+			CfgValidator.NO_EOL_NL,
+			testInput.indexOf("define"),  // offset
+			"define TEST1".length      // length
+		)
+	}
+
 	def private void assertNlIsNotEol(CfgFile m) {
 		m.assertError(
 			CfgPackage.eINSTANCE.c_Directive,
@@ -105,6 +128,14 @@ class CfgValidatorTest {
 		'''
 			#
 			 include <test1.h>
+		'''.parse.assertExtraNlIsInCDirective
+	}
+
+	@Test
+	def void test_1_2_CDirective_ExtraNlIsInCDirective() {
+		'''
+			#
+			 define TEST1 test1
 		'''.parse.assertExtraNlIsInCDirective
 	}
 

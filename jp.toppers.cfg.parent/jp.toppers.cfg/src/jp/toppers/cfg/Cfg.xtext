@@ -1,23 +1,31 @@
-grammar jp.toppers.cfg.Cfg hidden(C_CR, C_LF, ML_COMMENT, SL_COMMENT)
+grammar jp.toppers.cfg.Cfg hidden(ML_COMMENT, SL_COMMENT)
 import "http://www.eclipse.org/emf/2002/Ecore" as ecore
 generate cfg "http://www.toppers.jp/cfg/Cfg"
 
-CfgFile: {CfgFile} (
-	includeLines += IncludeLine
-	| c_directives += C_Directive
-)* ;
+CfgFile: {CfgFile}
+	(C_CRLF | C_SPTAB)* (
+		includeLines += IncludeLine
+		| c_directives += C_Directive
+	)*
+;
 
 IncludeLine:
-	C_SPTAB* 'INCLUDE' C_SPTAB* '(' C_SPTAB* name=C_HeaderName C_SPTAB* ')' C_SPTAB* ';'
+	'INCLUDE' (C_CRLF | C_SPTAB)* 
+		'(' (C_CRLF | C_SPTAB)* name=C_HeaderName (C_CRLF | C_SPTAB)* ')' 
+		(C_CRLF | C_SPTAB)* ';' (C_CRLF | C_SPTAB)*
 ;
 
 // c preprocessor directives
 C_Directive:
-	C_SPTAB* sharp='#' C_SPTAB* line=C_IncludeLine
+	sharp='#' (C_CRLF | C_SPTAB)* (
+		line=C_IncludeLine
+		| line=C_DefineLine
+	) C_SPTAB* cr=C_CRLF (C_CRLF | C_SPTAB)*
 ;
 
 C_IncludeLine:
-	'include' C_SPTAB+ name=C_HeaderName;
+	'include' (C_CRLF | C_SPTAB)+ name=C_HeaderName
+;
 
 // header name
 C_HeaderName: ('<' C_HCharSequence '>' | '"' C_QCharSequence '"') ;
@@ -32,11 +40,33 @@ C_QCharSequence:
 	| C_CONTROL_CHARS_WITHOUT_NL)+
 ;
 
+C_DefineLine: 
+	'define' C_SPTAB+ name=C_Identifier (C_SPTAB+ replacement+=C_PpToken)*
+;
+
+// c identifier
+C_PpToken:
+	 C_Identifier
+;
+
+C_Identifier: // implementation-defined characters are not support
+	C_NONDIGIT (C_NONDIGIT | C_DIGIT)*
+;
+
 // charactors
 terminal C_DIGIT: '0'..'9' ;
-terminal C_NONDIGIT: (C_ALPHABET_LOWER|C_ALPHABET_UPPER|C_UNDERSCORE);
-terminal C_ALPHABET_LOWER: 'a'..'z' ;
-terminal C_ALPHABET_UPPER: 'A'..'Z' ;
+terminal C_NONDIGIT: (
+	C_ALPHABET_HEX_LOWER 
+	| C_ALPHABET_HEX_UPPER
+	| C_ALPHABET_NONHEX_LOWER
+	| C_ALPHABET_NONHEX_UPPER
+	| C_UNDERSCORE
+);
+terminal C_ALPHABET_HEX_LOWER: 'a'..'f';
+terminal C_ALPHABET_HEX_UPPER: 'A'..'F';
+terminal C_ALPHABET_NONHEX_LOWER: 'g'..'z' ;
+terminal C_ALPHABET_NONHEX_UPPER: 'G'..'Z' ;
+terminal C_CRLF: (C_CR | C_LF | C_CR C_LF);
 terminal C_SPTAB: C_SP | C_TAB;
 terminal C_UNDERSCORE: '_';
 terminal C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US:
@@ -46,11 +76,10 @@ terminal C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US:
 terminal C_CONTROL_CHARS_WITHOUT_NL:
 	'\\' ('t' | 'v' | 'f')
 ;
-terminal C_SP: ' ';
-terminal C_TAB: '\t';
-terminal C_CR: '\r';
-terminal C_LF: '\n';
-
+terminal fragment C_SP: ' ';
+terminal fragment C_TAB: '\t';
+terminal fragment C_CR: '\r';
+terminal fragment C_LF: '\n';
 
 terminal ML_COMMENT : '/*' -> '*/';
 terminal SL_COMMENT : '//' !('\n'|'\r')* ('\r'? '\n')?;

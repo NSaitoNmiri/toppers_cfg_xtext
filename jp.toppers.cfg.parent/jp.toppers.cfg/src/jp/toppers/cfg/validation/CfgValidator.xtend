@@ -60,8 +60,9 @@ class CfgValidator extends AbstractCfgValidator {
 		var fnode = NodeModelUtils.getNode(f) as RootNode
 		var fileStr = fnode.completeContent
 		var r = directive.fullTextRegion
+		var l = NodeModelUtils.getNode(directive.line) as INode
+		var lendOffs = l.offset+l.length
 
-		var lendOffs = r.offset + r.length
 		if(lendOffs < fileStr.length()) {
 			var si = fileStr.indexOf('\n', lendOffs)
 			if (si >= 0) {
