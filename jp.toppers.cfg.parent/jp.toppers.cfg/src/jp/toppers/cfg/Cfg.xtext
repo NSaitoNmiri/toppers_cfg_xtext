@@ -32,8 +32,6 @@ C_QCharSequence:
 	| C_CONTROL_CHARS_WITHOUT_NL)+
 ;
 
-Eol:  (C_SPTAB | C_CR | C_LF)* (C_CR | C_LF)+;
-
 // charactors
 terminal C_DIGIT: '0'..'9' ;
 terminal C_NONDIGIT: (C_ALPHABET_LOWER|C_ALPHABET_UPPER|C_UNDERSCORE);

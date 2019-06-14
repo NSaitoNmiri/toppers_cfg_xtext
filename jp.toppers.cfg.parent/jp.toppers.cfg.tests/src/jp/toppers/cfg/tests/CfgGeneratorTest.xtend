@@ -13,7 +13,46 @@ class CfgGeneratorTest {
 	@Inject extension CompilationTestHelper
 
 	@Test
-	def void test2_1_1_C_includeHeaderFile() {
+	def void test_0_1_CInclude() {
+		'''
+		'''.assertCompilesTo(
+		'''
+		''')
+	}
+
+	@Test
+	def void test_1_1_CInclude() {
+		'''
+		#include <test1.h>
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		''')
+	}
+
+	@Test
+	def void test_1_2_CInclude() {
+		'''
+		
+		#include <test1.h>
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		''')
+	}
+
+	@Test
+	def void test_1_3_CInclude() {
+		'''
+		   #include <test1.h>
+		'''.assertCompilesTo(
+		'''
+		#include <test1.h>
+		''')
+	}
+
+	@Test
+	def void test_2_1_CInclude() {
 		'''
 		#include <test1.h>
 		#include <test2.h>
@@ -25,7 +64,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test2_1_2_C_includeHeaderFile() {
+	def void test_2_2_CInclude() {
 		'''
 		#include "test1.h"
 		#include "test2.h"
@@ -37,7 +76,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test2_1_3_C_includeHeaderFile() {
+	def void test_2_3_CInclude() {
 		'''
 		#include <test1.h>
 		#include "test2.h"
@@ -49,7 +88,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test2_2_1_C_includeHeaderFile() {
+	def void test_2_4_CInclude() {
 		'''
 		#include <test1.h>
 		
@@ -62,7 +101,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test2_2_2_C_includeHeaderFile() {
+	def void test_2_5_CInclude() {
 		'''
 		#include "test1.h"
 		
@@ -75,7 +114,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test4_1_C_includeHeaderFile() {
+	def void test_4_1_CInclude() {
 		'''
 		#include <test1.h>
 		#include "test2.h"
@@ -91,7 +130,7 @@ class CfgGeneratorTest {
 	}
 
 	@Test
-	def void test4_2_C_includeHeaderFile() {
+	def void test_4_2_CInclude() {
 		'''
 		#include <test1.h>
 

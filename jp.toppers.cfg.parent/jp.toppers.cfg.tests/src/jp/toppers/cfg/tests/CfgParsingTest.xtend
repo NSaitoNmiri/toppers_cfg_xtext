@@ -21,7 +21,7 @@ class CfgParsingTest {
 	@Inject extension ValidationTestHelper
 
 	@Test
-	def void test0_EmptyFile() {
+	def void test_0_1_EmptyFile() {
 		var cfgFile = ''''''.parse
 		Assert.assertNotNull(cfgFile)
 		cfgFile.assertNoErrors
@@ -29,7 +29,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_1_C_IncludeOneHHeaderFile() {
+	def void test_1_1_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 		'''.parse
@@ -44,7 +44,7 @@ class CfgParsingTest {
 	}
 	
 	@Test
-	def void test1_2_C_IncludeOneHHeaderFile() {
+	def void test_1_2_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <'>
 		'''.parse
@@ -59,7 +59,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_3_C_IncludeOneHHeaderFile() {
+	def void test_1_3_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			# include <test1.h>
 		'''.parse
@@ -74,7 +74,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test2_1_C_IncludeTwoHHeaderFile() {
+	def void test_2_1_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			#include <test2.h>
@@ -93,7 +93,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test2_2_C_IncludeTwoHHeaderFile() {
+	def void test_2_2_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			
@@ -114,7 +114,7 @@ class CfgParsingTest {
 
 
 	@Test
-	def void test4_1_C_IncludeFourHHeaderFile() {
+	def void test_4_1_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h>
 			#include <test2.h>
@@ -141,7 +141,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_1_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_1_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include test1.h
 		'''.parse
@@ -151,7 +151,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_2_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_2_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test1.h
 		'''.parse
@@ -161,7 +161,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_3_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_3_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include test1.h>
 		'''.parse
@@ -171,7 +171,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_4_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_4_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <>
 		'''.parse
@@ -181,7 +181,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_5_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_5_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <>>
 		'''.parse
@@ -191,7 +191,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_6_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_6_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include<test.h>
 		'''.parse
@@ -201,7 +201,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_7_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_7_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include < test.h>
 		'''.parse
@@ -211,7 +211,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_8_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_8_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test.h >
 		'''.parse
@@ -221,7 +221,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_9_C_IncludeOneHHeaderFile() {
+	def void test_Err_1_9_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <tes t.h >
 		'''.parse
@@ -231,7 +231,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_1_C_IncludeOneQHeaderFile() {
+	def void test_1_1_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 		'''.parse
@@ -246,7 +246,7 @@ class CfgParsingTest {
 	}
 	
 	@Test
-	def void test1_2_C_IncludeOneQHeaderFile() {
+	def void test_1_2_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include "<"
 		'''.parse
@@ -261,7 +261,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test2_1_C_IncludeTwoQHeaderFile() {
+	def void test_2_1_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 			#include "test2.h"
@@ -280,7 +280,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test4_1_C_IncludeFourQHeaderFile() {
+	def void test_4_1_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h"
 			#include "test2.h"
@@ -307,7 +307,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_2_C_IncludeOneQHeaderFile() {
+	def void test_Err_1_1_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include "test1.h
 		'''.parse
@@ -317,7 +317,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_3_C_IncludeOneQHeaderFile() {
+	def void test_Err_1_2_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include test1.h"
 		'''.parse
@@ -327,7 +327,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_4_C_IncludeOneQHeaderFile() {
+	def void test_Err_1_3_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include ""
 		'''.parse
@@ -337,7 +337,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test_Err_1_5_C_IncludeOneQHeaderFile() {
+	def void test_Err_1_4_CInclude_QHeaderFile() {
 		val cfgFile = '''
 			#include """
 		'''.parse
@@ -347,7 +347,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_1_Include() {
+	def void test_1_1_Include() {
 		val cfgFile = '''
 			INCLUDE("test1.cfg");
 		'''.parse
@@ -361,7 +361,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_2_Include() {
+	def void test_1_2_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>);
 		'''.parse
@@ -375,7 +375,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_3_Include() {
+	def void test_1_3_Include() {
 		val cfgFile = '''
 			INCLUDE (<test1.cfg>);
 		'''.parse
@@ -389,7 +389,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_4_Include() {
+	def void test_1_4_Include() {
 		val cfgFile = '''
 			INCLUDE( <test1.cfg>);
 		'''.parse
@@ -403,7 +403,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_5_Include() {
+	def void test_1_5_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg> );
 		'''.parse
@@ -417,7 +417,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test1_6_Include() {
+	def void test_1_6_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>) ;
 		'''.parse
@@ -431,7 +431,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test2_1_Include() {
+	def void test_2_1_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>);
 			INCLUDE(<test2.cfg>);
@@ -448,7 +448,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test2_2_Include() {
+	def void test_2_2_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>);INCLUDE(<test2.cfg>);
 		'''.parse
@@ -464,7 +464,7 @@ class CfgParsingTest {
 	}
 
 	@Test
-	def void test4_1_Include() {
+	def void test_4_1_Include() {
 		val cfgFile = '''
 			INCLUDE(<test1.cfg>);
 			INCLUDE(<test2.cfg>);
