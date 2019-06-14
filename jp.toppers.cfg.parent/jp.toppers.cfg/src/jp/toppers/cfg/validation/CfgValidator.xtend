@@ -5,9 +5,11 @@ package jp.toppers.cfg.validation
 
 import com.google.inject.Inject
 import java.util.regex.Pattern
+import jp.toppers.cfg.cfg.C_Directive
 import jp.toppers.cfg.cfg.C_IncludeLine
 import jp.toppers.cfg.cfg.CfgFile
 import jp.toppers.cfg.cfg.CfgPackage
+import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.impl.RootNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.ILocationInFileProvider
@@ -23,15 +25,17 @@ class CfgValidator extends AbstractCfgValidator {
 	protected static val ISSUE_CODE_PREFIX = "jp.toppers.cfg.";
 	public static val NO_BOL_SHARP = ISSUE_CODE_PREFIX + "NoBolSharp";
 	public static val NO_EOL_NL = ISSUE_CODE_PREFIX + "NoEolNl";
-	
+	public static val EXTRA_NL_IN_CDIRECTIVE = ISSUE_CODE_PREFIX + "ExtraNlInCDirective";
+	public static val EXTRA_NL_IN_CINCLUDE = ISSUE_CODE_PREFIX + "ExtraNlInCInclude";
+
 	@Inject extension ILocationInFileProvider
 
 	@Check
-	def checkSharpIsBeginningOfLine(C_IncludeLine line) {
-		var f = line.eContainer as CfgFile
+	def checkSharpIsBeginningOfLine(C_Directive directive) {
+		var f = directive.eContainer as CfgFile
 		var fnode = NodeModelUtils.getNode(f) as RootNode
 		var fileStr = fnode.completeContent
-		var r = line.fullTextRegion
+		var r = directive.fullTextRegion
 
 		if(r.offset > 0) {
 			var si = fileStr.lastIndexOf('\n', r.offset-1)
@@ -43,7 +47,7 @@ class CfgValidator extends AbstractCfgValidator {
 			var matcher = pattern.matcher(substr)
 			if(matcher.find) {
 				error("'#' is not the beginning of line.",
-					CfgPackage.eINSTANCE.c_IncludeLine_Sharp,
+					CfgPackage.eINSTANCE.c_Directive_Sharp,
 					NO_BOL_SHARP,
 					fileStr.substring(r.offset, r.offset+r.length))
 			}
@@ -51,11 +55,11 @@ class CfgValidator extends AbstractCfgValidator {
 	}
 	
 	@Check
-	def checkNewLineIsEndOfLine(C_IncludeLine line) {
-		var f = line.eContainer as CfgFile
+	def checkNewLineIsEndOfLine(C_Directive directive) {
+		var f = directive.eContainer as CfgFile
 		var fnode = NodeModelUtils.getNode(f) as RootNode
 		var fileStr = fnode.completeContent
-		var r = line.fullTextRegion
+		var r = directive.fullTextRegion
 
 		var lendOffs = r.offset + r.length
 		if(lendOffs < fileStr.length()) {
@@ -70,8 +74,52 @@ class CfgValidator extends AbstractCfgValidator {
 			}
 		}
 		error("new-line charactor is required at the end of C preprosessor directives.",
-			CfgPackage.eINSTANCE.c_IncludeLine_Name,
+			CfgPackage.eINSTANCE.c_Directive_Line,
 			NO_EOL_NL,
 			fileStr.substring(r.offset, r.offset+r.length))
 	}	
+
+	@Check
+	def checkNoExtraNewLineInCDirective(C_Directive directive) {
+		var f = directive.eContainer as CfgFile
+		var fnode = NodeModelUtils.getNode(f) as RootNode
+		var fileStr = fnode.completeContent
+
+		var node = NodeModelUtils.getNode(directive) as INode
+		var nodeStr = node.text
+
+		var sofs = nodeStr.indexOf(directive.sharp)
+		var lofs = directive.line.fullTextRegion.offset - node.totalOffset
+
+		var substr = nodeStr.substring(sofs, lofs);
+		var pattern = Pattern.compile("(\r|\n)")
+		var matcher = pattern.matcher(substr)
+
+		if(matcher.find) {
+			error("extra new-line charactor is detected in C preprosessor directives.",
+				CfgPackage.eINSTANCE.c_Directive_Line,
+				EXTRA_NL_IN_CDIRECTIVE,
+				fileStr.substring(sofs, lofs))
+		}
+	}
+
+	@Check
+	def checkNoExtraNewLineInCIncludeLine(C_IncludeLine line) {
+		var d = line.eContainer as C_Directive
+		var node = NodeModelUtils.getNode(d) as INode
+		var text = node.text
+		val incStr = "include"
+
+		var sofs = text.indexOf(incStr)
+		var nofs = text.indexOf(line.name)
+		var substr = text.substring(sofs+incStr.length, nofs);
+		var pattern = Pattern.compile("(\r|\n)")
+		var matcher = pattern.matcher(substr)
+		if(matcher.find) {
+			error("extra new-line charactor is detected in C include lines.",
+				CfgPackage.eINSTANCE.c_IncludeLine_Name,
+				EXTRA_NL_IN_CINCLUDE,
+				text.substring(6, nofs))
+		}
+	}
 }

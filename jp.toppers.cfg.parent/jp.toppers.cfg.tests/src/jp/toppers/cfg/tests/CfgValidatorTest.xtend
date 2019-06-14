@@ -44,7 +44,7 @@ class CfgValidatorTest {
 	
 	def private void assertSharpIsNotBol(CfgFile m, String lineString) {
 		m.assertError(
-			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgPackage.eINSTANCE.c_Directive,
 			CfgValidator.NO_BOL_SHARP,
 			"'#' is not the beginning of line."
 		)
@@ -52,7 +52,7 @@ class CfgValidatorTest {
 
 	def private void assertNlIsNotEol(CfgFile m) {
 		m.assertError(
-			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgPackage.eINSTANCE.c_Directive,
 			CfgValidator.NO_EOL_NL,
 			"new-line charactor is required at the end of C preprosessor directives."
 		)
@@ -63,10 +63,10 @@ class CfgValidatorTest {
 		val testInput ='''#include <test1.h>'''
 
 		testInput.parse.assertError(
-			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgPackage.eINSTANCE.c_Directive,
 			CfgValidator.NO_EOL_NL,
-			testInput.indexOf("<"),  // offset
-			"<test1.h>".length      // length
+			testInput.indexOf("include"),  // offset
+			"include <test1.h>".length      // length
 		)
 	}
 	@Test
@@ -76,7 +76,7 @@ class CfgValidatorTest {
 		#include <test1.h>#include <test2.h>
 		'''
 		testInput.parse.assertError(
-			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgPackage.eINSTANCE.c_Directive,
 			CfgValidator.NO_BOL_SHARP,
 			testInput.lastIndexOf("#"),  // offset
 			"#".length      // length
@@ -89,5 +89,46 @@ class CfgValidatorTest {
 			#include <test1.h>
 			  #include <test2.h>
 		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_2_C_Include_SharpIsBOL() {
+		'''
+			#include <test1.h>
+			
+			 #include <test2.h>
+		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_1_CDirective_ExtraNl() {
+		'''
+			#
+			 include <test1.h>
+		'''.parse.assertExtraNlIsInCDirective
+	}
+
+	def private void assertExtraNlIsInCDirective(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_Directive,
+			CfgValidator.EXTRA_NL_IN_CDIRECTIVE,
+			"extra new-line charactor is detected in C preprosessor directives."
+		)
+	}
+
+	@Test
+	def void test_1_1_CInclude_ExtraNl() {
+		'''
+			#include
+			 <test1.h>
+		'''.parse.assertExtraNlIsInCInclude
+	}
+
+	def private void assertExtraNlIsInCInclude(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgValidator.EXTRA_NL_IN_CINCLUDE,
+			"extra new-line charactor is detected in C include lines."
+		)
 	}
 }
