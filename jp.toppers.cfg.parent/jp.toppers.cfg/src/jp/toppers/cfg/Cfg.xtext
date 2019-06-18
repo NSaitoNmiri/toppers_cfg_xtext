@@ -4,15 +4,17 @@ generate cfg "http://www.toppers.jp/cfg/Cfg"
 
 CfgFile: {CfgFile}
 	(C_CRLF | C_SPTAB)* (
-		includeLines += IncludeLine
+		apis += StaticApi (C_CRLF | C_SPTAB)*
 		| c_directives += C_Directive
 	)*
 ;
 
+StaticApi hidden(C_CRLF, C_SPTAB, SL_COMMENT, ML_COMMENT):
+	line=IncludeLine
+;
+
 IncludeLine:
-	'INCLUDE' (C_CRLF | C_SPTAB)* 
-		'(' (C_CRLF | C_SPTAB)* name=C_HeaderName (C_CRLF | C_SPTAB)* ')' 
-		(C_CRLF | C_SPTAB)* ';' (C_CRLF | C_SPTAB)*
+	'INCLUDE' '(' name=C_HeaderName ')' ';'
 ;
 
 // c preprocessor directives

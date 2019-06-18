@@ -14,6 +14,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import jp.toppers.cfg.cfg.C_IncludeLine
 import jp.toppers.cfg.cfg.C_DefineLine
+import jp.toppers.cfg.cfg.StaticApi
 
 @RunWith(XtextRunner)
 @InjectWith(CfgInjectorProvider)
@@ -623,8 +624,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, '"test1.cfg"');
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, '"test1.cfg"');
 	}
 
 	@Test
@@ -637,8 +638,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, "<test1.cfg>");
+		var api = cfgFile.apis.get(0) as StaticApi
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
 	}
 
 	@Test
@@ -651,8 +652,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, "<test1.cfg>");
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
 	}
 
 	@Test
@@ -665,8 +666,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, "<test1.cfg>");
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
 	}
 
 	@Test
@@ -679,8 +680,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, "<test1.cfg>");
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
 	}
 
 	@Test
@@ -693,8 +694,8 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line.name, "<test1.cfg>");
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
 	}
 
 	@Test
@@ -708,10 +709,10 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.name, "<test1.cfg>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.name, "<test2.cfg>");
+		var api1 = cfgFile.apis.get(0)
+		Assert.assertEquals(api1.line.name, "<test1.cfg>");
+		var api2 = cfgFile.apis.get(1)
+		Assert.assertEquals(api2.line.name, "<test2.cfg>");
 	}
 
 	@Test
@@ -724,10 +725,10 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.name, "<test1.cfg>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.name, "<test2.cfg>");
+		var api1 = cfgFile.apis.get(0)
+		Assert.assertEquals(api1.line.name, "<test1.cfg>");
+		var api2 = cfgFile.apis.get(1)
+		Assert.assertEquals(api2.line.name, "<test2.cfg>");
 	}
 
 	@Test
@@ -743,14 +744,14 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.includeLines.get(0)
-		Assert.assertEquals(line1.name, "<test1.cfg>");
-		var line2 = cfgFile.includeLines.get(1)
-		Assert.assertEquals(line2.name, "<test2.cfg>");
-		var line3 = cfgFile.includeLines.get(2)
-		Assert.assertEquals(line3.name, "<test3.cfg>");
-		var line4 = cfgFile.includeLines.get(3)
-		Assert.assertEquals(line4.name, "<test4.cfg>");
+		var api1 = cfgFile.apis.get(0)
+		Assert.assertEquals(api1.line.name, "<test1.cfg>");
+		var api2 = cfgFile.apis.get(1)
+		Assert.assertEquals(api2.line.name, "<test2.cfg>");
+		var api3 = cfgFile.apis.get(2)
+		Assert.assertEquals(api3.line.name, "<test3.cfg>");
+		var api4 = cfgFile.apis.get(3)
+		Assert.assertEquals(api4.line.name, "<test4.cfg>");
 	}
 
 	@Test
