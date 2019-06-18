@@ -7,10 +7,8 @@ import com.google.inject.Inject
 import java.util.regex.Pattern
 import jp.toppers.cfg.cfg.C_Directive
 import jp.toppers.cfg.cfg.C_IncludeLine
-import jp.toppers.cfg.cfg.CfgFile
 import jp.toppers.cfg.cfg.CfgPackage
 import org.eclipse.xtext.nodemodel.INode
-import org.eclipse.xtext.nodemodel.impl.RootNode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.ILocationInFileProvider
 import org.eclipse.xtext.validation.Check
@@ -32,9 +30,8 @@ class CfgValidator extends AbstractCfgValidator {
 
 	@Check
 	def checkSharpIsBeginningOfLine(C_Directive directive) {
-		var f = directive.eContainer as CfgFile
-		var fnode = NodeModelUtils.getNode(f) as RootNode
-		var fileStr = fnode.completeContent
+		var fnode = NodeModelUtils.getNode(directive.eContainer) as INode
+		var fileStr = fnode.text
 		var r = directive.fullTextRegion
 
 		if(r.offset > 0) {
@@ -56,9 +53,8 @@ class CfgValidator extends AbstractCfgValidator {
 	
 	@Check
 	def checkNewLineIsEndOfLine(C_Directive directive) {
-		var f = directive.eContainer as CfgFile
-		var fnode = NodeModelUtils.getNode(f) as RootNode
-		var fileStr = fnode.completeContent
+		var fnode = NodeModelUtils.getNode(directive.eContainer) as INode
+		var fileStr = fnode.text
 		var r = directive.fullTextRegion
 		var l = NodeModelUtils.getNode(directive.line) as INode
 		var lendOffs = l.offset+l.length
@@ -82,9 +78,8 @@ class CfgValidator extends AbstractCfgValidator {
 
 	@Check
 	def checkNoExtraNewLineInCDirective(C_Directive directive) {
-		var f = directive.eContainer as CfgFile
-		var fnode = NodeModelUtils.getNode(f) as RootNode
-		var fileStr = fnode.completeContent
+		var fnode = NodeModelUtils.getNode(directive.eContainer) as INode
+		var fileStr = fnode.text
 
 		var node = NodeModelUtils.getNode(directive) as INode
 		var nodeStr = node.text
