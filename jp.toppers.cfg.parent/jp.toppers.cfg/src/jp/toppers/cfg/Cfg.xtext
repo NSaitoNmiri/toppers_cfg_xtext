@@ -14,7 +14,7 @@ StaticApi hidden(C_CRLF, C_SPTAB, SL_COMMENT, ML_COMMENT):
 ;
 
 IncludeLine:
-	'INCLUDE' '(' name=C_HeaderName ')' ';'
+	'INCLUDE' '(' name=C_HEADER_NAME ')' ';'
 ;
 
 // c preprocessor directives
@@ -26,17 +26,17 @@ C_Directive:
 ;
 
 C_IncludeLine:
-	'include' (C_CRLF | C_SPTAB)+ name=C_HeaderName
+	'include' (C_CRLF | C_SPTAB)+ name=C_HEADER_NAME
 ;
 
 // header name
-C_HeaderName: ('<' C_HCharSequence '>' | '"' C_QCharSequence '"') ;
-C_HCharSequence:
+terminal C_HEADER_NAME: ('<' C_HCHAR_SEQUENCE -> '>' | '"' C_QCHAR_SEQUENCE -> '"') ;
+terminal C_HCHAR_SEQUENCE:
 	(C_DIGIT | C_NONDIGIT
-	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US | "'" | '"' | '\\'
+	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US | "'" | '"'
 	| C_CONTROL_CHARS_WITHOUT_NL)+
 ;
-C_QCharSequence:
+terminal C_QCHAR_SEQUENCE:
 	(C_DIGIT | C_NONDIGIT
 	| C_GRAPHIC_CHARS_WITHOUT_SQ_DQ_BS_GT_LT_US | '<' | "'" | '>'
 	| C_CONTROL_CHARS_WITHOUT_NL)+

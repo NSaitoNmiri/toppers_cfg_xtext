@@ -162,4 +162,27 @@ class CfgValidatorTest {
 			"extra new-line charactor is detected in C include lines."
 		)
 	}
+
+	@Test
+	def void test_1_1_CInclude_ExtraSpc() {
+		'''
+			#include <test1.h >
+		'''.parse.assertExtraSpcIsInCIncludeName
+	}
+
+	@Test
+	def void test_1_2_CInclude_ExtraSpc() {
+		'''
+			#include <test1.h	>
+		'''.parse.assertExtraSpcIsInCIncludeName
+	}
+
+
+	def private void assertExtraSpcIsInCIncludeName(CfgFile m) {
+		m.assertError(
+			CfgPackage.eINSTANCE.c_IncludeLine,
+			CfgValidator.EXTRA_SPC_IN_CINCLUDE_NAME,
+			"extra space or tab charactor is detected in header name."
+		)
+	}
 }

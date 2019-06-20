@@ -25,6 +25,7 @@ class CfgValidator extends AbstractCfgValidator {
 	public static val NO_EOL_NL = ISSUE_CODE_PREFIX + "NoEolNl";
 	public static val EXTRA_NL_IN_CDIRECTIVE = ISSUE_CODE_PREFIX + "ExtraNlInCDirective";
 	public static val EXTRA_NL_IN_CINCLUDE = ISSUE_CODE_PREFIX + "ExtraNlInCInclude";
+	public static val EXTRA_SPC_IN_CINCLUDE_NAME = ISSUE_CODE_PREFIX + "ExtraSpcInCIncludeName";
 
 	@Inject extension ILocationInFileProvider
 
@@ -116,6 +117,23 @@ class CfgValidator extends AbstractCfgValidator {
 				CfgPackage.eINSTANCE.c_IncludeLine_Name,
 				EXTRA_NL_IN_CINCLUDE,
 				text.substring(6, nofs))
+		}
+	}
+
+	@Check
+	def checkNoExtraSpaceInCIncludeLineName(C_IncludeLine line) {
+		var d = line.eContainer as C_Directive
+		var node = NodeModelUtils.getNode(d) as INode
+		var text = node.text
+
+		var nofs = text.indexOf(line.name)
+		var pattern = Pattern.compile("( |\t)")
+		var matcher = pattern.matcher(line.name)
+		if(matcher.find) {
+			error("extra space or tab charactor is detected in header name.",
+				CfgPackage.eINSTANCE.c_IncludeLine_Name,
+				EXTRA_SPC_IN_CINCLUDE_NAME,
+				text.substring(nofs, nofs+line.name.length()))
 		}
 	}
 }
