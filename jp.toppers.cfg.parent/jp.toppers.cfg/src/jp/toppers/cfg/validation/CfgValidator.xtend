@@ -12,6 +12,8 @@ import org.eclipse.xtext.nodemodel.INode
 import org.eclipse.xtext.nodemodel.util.NodeModelUtils
 import org.eclipse.xtext.resource.ILocationInFileProvider
 import org.eclipse.xtext.validation.Check
+import java.util.Objects
+import jp.toppers.cfg.cfg.CfgFile
 
 /**
  * This class contains custom validation rules. 
@@ -54,27 +56,29 @@ class CfgValidator extends AbstractCfgValidator {
 	
 	@Check
 	def checkNewLineIsEndOfLine(C_Directive directive) {
-		var fnode = NodeModelUtils.getNode(directive.eContainer) as INode
-		var fileStr = fnode.text
-		var r = directive.fullTextRegion
-		var l = NodeModelUtils.getNode(directive.line) as INode
-		var lendOffs = l.offset+l.length
-
-		if(lendOffs < fileStr.length()) {
-			var si = fileStr.indexOf('\n', lendOffs)
-			if (si >= 0) {
-				var substr = fileStr.substring(lendOffs, si);
-				var pattern = Pattern.compile("\\S", Pattern.COMMENTS)
-				var matcher = pattern.matcher(substr)
-				if(!matcher.find) {
-					return
-				}
+		if (directive.cr1){ return }
+		if (directive.s_comment) {return}
+		if (Objects.nonNull(directive.m_comment)) {
+			if(directive.m_comment.contains('\n')) {
+				return
 			}
 		}
+		for (e : directive.eols) {
+			if(e.contains('\n')) {
+				return
+			}
+		}
+
+		var file = directive.eContainer as CfgFile
+		var fnode = NodeModelUtils.getNode(file) as INode
+		var fText = fnode.text
+		var dRegion = directive.fullTextRegion
+		var dNextOfs = dRegion.offset + dRegion.length
+
 		error("new-line charactor is required at the end of C preprosessor directives.",
 			CfgPackage.eINSTANCE.c_Directive_Line,
 			NO_EOL_NL,
-			fileStr.substring(r.offset, r.offset+r.length))
+			fText.substring(dRegion.offset, dNextOfs))
 	}	
 
 	@Check

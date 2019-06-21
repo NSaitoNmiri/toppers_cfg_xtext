@@ -79,6 +79,37 @@ class CfgValidatorTest {
 		'''#include <test1.h>INCLUDE("test2.h");
 		'''.parse.assertNlIsNotEol
 	}
+	
+	@Test
+	def void test_1_4_CInclude_NlIsNotEol() {
+		'''#include <test1.h> // Test'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_5_CInclude_NlIsNotEol() {
+		'''#include <test1.h> // Test
+		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_6_CInclude_NlIsNotEol() {
+		'''#include <test1.h> /* Test */'''.parse.assertNlIsNotEol
+	}
+
+	@Test
+	def void test_1_8_CInclude_NlIsNotEol() {
+		'''#include <test1.h> /* Test */
+		// /* test2 */
+		/* test3 */
+		INCLUDE(<stdio.h>);
+		'''.parse.assertNoErrors
+	}
+
+	@Test
+	def void test_1_9_CInclude_NlIsNotEol() {
+		'''#include <test1.h> /* Test */ INCLUDE(<stdio.h>);
+		'''.parse.assertNlIsNotEol
+	}
 
 	@Test
 	def void test_1_1_CInclude_NlIsNotEol_ErrPos() {

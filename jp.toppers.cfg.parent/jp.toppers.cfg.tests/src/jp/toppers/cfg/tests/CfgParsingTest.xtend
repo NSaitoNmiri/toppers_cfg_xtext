@@ -15,6 +15,7 @@ import org.junit.runner.RunWith
 import jp.toppers.cfg.cfg.C_IncludeLine
 import jp.toppers.cfg.cfg.C_DefineLine
 import jp.toppers.cfg.cfg.StaticApi
+import jp.toppers.cfg.cfg.C_Identifier
 
 @RunWith(XtextRunner)
 @InjectWith(CfgInjectorProvider)
@@ -25,6 +26,70 @@ class CfgParsingTest {
 	@Test
 	def void test_0_1_EmptyFile() {
 		var cfgFile = ''''''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_0_2_EmptyFile() {
+		var cfgFile = ''' '''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_0_3_EmptyFile() {
+		var cfgFile = '''	'''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_0_4_EmptyFile() {
+		var cfgFile =
+		'''
+		'''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_1_1_EmptyFile() {
+		var cfgFile = '''//'''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_1_2_EmptyFile() {
+		var cfgFile =
+		'''
+		//
+		'''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_2_1_EmptyFile() {
+		var cfgFile = '''/* test */'''.parse
+		Assert.assertNotNull(cfgFile)
+		cfgFile.assertNoErrors
+		Assert.assertEquals(0, cfgFile.c_directives.length())
+	}
+
+	@Test
+	def void test_2_2_EmptyFile() {
+		var cfgFile = '''
+		/*
+		 * test
+		 */'''.parse
 		Assert.assertNotNull(cfgFile)
 		cfgFile.assertNoErrors
 		Assert.assertEquals(0, cfgFile.c_directives.length())
@@ -60,24 +125,9 @@ class CfgParsingTest {
 		Assert.assertEquals((line as C_IncludeLine).name, "<'>");
 	}
 
+	// this test is successful, but validator will check
 	@Test
 	def void test_1_3_CInclude_HHeaderFile() {
-		val cfgFile = '''
-			# include <test1.h>
-		'''.parse
-
-		Assert.assertNotNull(cfgFile)
-		val errors = cfgFile.eResource.errors
-		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
-		
-		var line = cfgFile.c_directives.get(0).line
-		Assert.assertTrue(line instanceof C_IncludeLine)
-		Assert.assertEquals((line as C_IncludeLine).name, "<test1.h>");
-	}
-
-	// this test is successful, but validator check will fail
-	@Test
-	def void test_1_4_CInclude_HHeaderFile() {
 		val cfgFile = '''
 			#include <test.h >
 		'''.parse
@@ -90,6 +140,52 @@ class CfgParsingTest {
 		Assert.assertEquals((line as C_IncludeLine).name, "<test.h >");
 	}
 
+	@Test
+	def void test_1_4_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			// Test
+			# include <test1.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
+		Assert.assertEquals((line as C_IncludeLine).name, "<test1.h>");
+	}
+
+	@Test
+	def void test_1_5_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			/* Test */
+			# include <test1.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
+		Assert.assertEquals((line as C_IncludeLine).name, "<test1.h>");
+	}
+
+	@Test
+	def void test_1_6_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			#include <test1.h> /* Comment */
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_IncludeLine)
+		Assert.assertEquals((line as C_IncludeLine).name, "<test1.h>");
+	}
 
 	@Test
 	def void test_2_1_CInclude_HHeaderFile() {
@@ -130,6 +226,63 @@ class CfgParsingTest {
 		Assert.assertEquals((line2 as C_IncludeLine).name, "<test2.h>");
 	}
 
+	@Test
+	def void test_2_3_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			#include <test1.h> // Test
+			#include <test2.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
+		Assert.assertEquals((line1 as C_IncludeLine).name, "<test1.h>");
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
+		Assert.assertEquals((line2 as C_IncludeLine).name, "<test2.h>");
+	}
+
+	@Test
+	def void test_2_4_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			#include <test1.h> /* Test */
+			#include <test2.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
+		Assert.assertEquals((line1 as C_IncludeLine).name, "<test1.h>");
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
+		Assert.assertEquals((line2 as C_IncludeLine).name, "<test2.h>");
+	}
+
+	@Test
+	def void test_2_5_CInclude_HHeaderFile() {
+		val cfgFile = '''
+			#include <test1.h>
+			// Test
+			#include <test2.h>
+		'''.parse
+
+		Assert.assertNotNull(cfgFile)
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+		
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
+		Assert.assertEquals((line1 as C_IncludeLine).name, "<test1.h>");
+		var line2 = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line2 instanceof C_IncludeLine)
+		Assert.assertEquals((line2 as C_IncludeLine).name, "<test2.h>");
+	}
 
 	@Test
 	def void test_4_1_CInclude_HHeaderFile() {
@@ -366,7 +519,10 @@ class CfgParsingTest {
 		
 		var line = cfgFile.c_directives.get(0).line
 		Assert.assertTrue(line instanceof C_DefineLine)
-		Assert.assertEquals((line as C_DefineLine).name, "TEST1");
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 0);
 	}
@@ -383,10 +539,17 @@ class CfgParsingTest {
 		
 		var line = cfgFile.c_directives.get(0).line
 		Assert.assertTrue(line instanceof C_DefineLine)
-		Assert.assertEquals((line as C_DefineLine).name, "TEST1");
+
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
-		Assert.assertEquals(list.get(0), "test1");
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
 	}
 
 	@Test
@@ -401,11 +564,21 @@ class CfgParsingTest {
 		
 		var line = cfgFile.c_directives.get(0).line
 		Assert.assertTrue(line instanceof C_DefineLine)
-		Assert.assertEquals((line as C_DefineLine).name, "TEST1");
+
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
-		Assert.assertEquals(list.get(0), "test1");
-		Assert.assertEquals(list.get(1), "test2");
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
+
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test2");
 	}
 
 	@Test
@@ -420,11 +593,21 @@ class CfgParsingTest {
 		
 		var line = cfgFile.c_directives.get(0).line
 		Assert.assertTrue(line instanceof C_DefineLine)
-		Assert.assertEquals((line as C_DefineLine).name, "TEST1");
+
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
-		Assert.assertEquals(list.get(0), "test1");
-		Assert.assertEquals(list.get(1), "test2");
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
+
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test2");
 	}
 
 	@Test
@@ -439,13 +622,29 @@ class CfgParsingTest {
 		
 		var line = cfgFile.c_directives.get(0).line
 		Assert.assertTrue(line instanceof C_DefineLine)
-		Assert.assertEquals((line as C_DefineLine).name, "TEST1");
+
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
-		Assert.assertEquals(list.get(0), "test1");
-		Assert.assertEquals(list.get(1), "test2");
-		Assert.assertEquals(list.get(2), "test3");
-		Assert.assertEquals(list.get(3), "test4");
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
+
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test2");
+
+		elem = list.get(2)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test3");
+
+		elem = list.get(3)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test4");
 	}
 
 	@Test
@@ -458,20 +657,34 @@ class CfgParsingTest {
 		Assert.assertNotNull(cfgFile)
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
-		
-		var line1 = cfgFile.c_directives.get(0).line
-		Assert.assertTrue(line1 instanceof C_DefineLine)
-		Assert.assertEquals((line1 as C_DefineLine).name, "TEST1");
-		var list1 = (line1 as C_DefineLine).replacement
-		Assert.assertEquals(list1.length, 1);
-		Assert.assertEquals(list1.get(0), "test1");
 
-		var line2 = cfgFile.c_directives.get(1).line
-		Assert.assertTrue(line2 instanceof C_DefineLine)
-		Assert.assertEquals((line2 as C_DefineLine).name, "TEST2");
-		var list2 = (line2 as C_DefineLine).replacement
-		Assert.assertEquals(list2.length, 1);
-		Assert.assertEquals(list2.get(0), "test2");
+		Assert.assertEquals(cfgFile.c_directives.length, 2);
+
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
+		var list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
+
+		line = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST2");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test2");
 	}
 
 	@Test
@@ -484,22 +697,41 @@ class CfgParsingTest {
 		Assert.assertNotNull(cfgFile)
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
-		
-		var line1 = cfgFile.c_directives.get(0).line
-		Assert.assertTrue(line1 instanceof C_DefineLine)
-		Assert.assertEquals((line1 as C_DefineLine).name, "TEST1");
-		var list1 = (line1 as C_DefineLine).replacement
-		Assert.assertEquals(list1.length, 2);
-		Assert.assertEquals(list1.get(0), "test11");
-		Assert.assertEquals(list1.get(1), "test12");
 
-		var line2 = cfgFile.c_directives.get(1).line
-		Assert.assertTrue(line2 instanceof C_DefineLine)
-		Assert.assertEquals((line2 as C_DefineLine).name, "TEST2");
-		var list2 = (line2 as C_DefineLine).replacement
-		Assert.assertEquals(list2.length, 2);
-		Assert.assertEquals(list2.get(0), "test21");
-		Assert.assertEquals(list2.get(1), "test22");
+		Assert.assertEquals(cfgFile.c_directives.length, 2);
+
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
+
+		var list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 2);
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test11");
+
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test12");
+
+		line = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST2");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 2);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test21");
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test22");
 	}
 
 	@Test
@@ -515,33 +747,63 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_directives.get(0).line
-		Assert.assertTrue(line1 instanceof C_DefineLine)
-		Assert.assertEquals((line1 as C_DefineLine).name, "TEST1");
-		var list1 = (line1 as C_DefineLine).replacement
-		Assert.assertEquals(list1.length, 1);
-		Assert.assertEquals(list1.get(0), "test1");
+		Assert.assertEquals(cfgFile.c_directives.length, 4);
 
-		var line2 = cfgFile.c_directives.get(1).line
-		Assert.assertTrue(line2 instanceof C_DefineLine)
-		Assert.assertEquals((line2 as C_DefineLine).name, "TEST2");
-		var list2 = (line2 as C_DefineLine).replacement
-		Assert.assertEquals(list2.length, 1);
-		Assert.assertEquals(list2.get(0), "test2");
+		// line 0
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
 
-		var line3 = cfgFile.c_directives.get(2).line
-		Assert.assertTrue(line3 instanceof C_DefineLine)
-		Assert.assertEquals((line3 as C_DefineLine).name, "TEST3");
-		var list3 = (line3 as C_DefineLine).replacement
-		Assert.assertEquals(list3.length, 1);
-		Assert.assertEquals(list3.get(0), "test3");
+		var list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test1");
 
-		var line4 = cfgFile.c_directives.get(3).line
-		Assert.assertTrue(line4 instanceof C_DefineLine)
-		Assert.assertEquals((line4 as C_DefineLine).name, "TEST4");
-		var list4 = (line4 as C_DefineLine).replacement
-		Assert.assertEquals(list4.length, 1);
-		Assert.assertEquals(list4.get(0), "test4");
+		// line 1
+		line = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST2");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test2");
+
+		// line 2
+		line = cfgFile.c_directives.get(2).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST3");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test3");
+
+		// line 3
+		line = cfgFile.c_directives.get(3).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST4");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 1);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test4");
 	}
 
 	@Test
@@ -557,45 +819,99 @@ class CfgParsingTest {
 		val errors = cfgFile.eResource.errors
 		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
 		
-		var line1 = cfgFile.c_directives.get(0).line
-		Assert.assertTrue(line1 instanceof C_DefineLine)
-		Assert.assertEquals((line1 as C_DefineLine).name, "TEST1");
-		var list1 = (line1 as C_DefineLine).replacement
-		Assert.assertEquals(list1.length, 4);
-		Assert.assertEquals(list1.get(0), "test11");
-		Assert.assertEquals(list1.get(1), "test12");
-		Assert.assertEquals(list1.get(2), "test13");
-		Assert.assertEquals(list1.get(3), "test14");
+		Assert.assertEquals(cfgFile.c_directives.length, 4);
 
-		var line2 = cfgFile.c_directives.get(1).line
-		Assert.assertTrue(line2 instanceof C_DefineLine)
-		Assert.assertEquals((line2 as C_DefineLine).name, "TEST2");
-		var list2 = (line2 as C_DefineLine).replacement
-		Assert.assertEquals(list2.length, 4);
-		Assert.assertEquals(list2.get(0), "test21");
-		Assert.assertEquals(list2.get(1), "test22");
-		Assert.assertEquals(list2.get(2), "test23");
-		Assert.assertEquals(list2.get(3), "test24");
+		// line 0
+		var line = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		var defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		var id = defLine.name
+		Assert.assertEquals(id.name, "TEST1");
 
-		var line3 = cfgFile.c_directives.get(2).line
-		Assert.assertTrue(line3 instanceof C_DefineLine)
-		Assert.assertEquals((line3 as C_DefineLine).name, "TEST3");
-		var list3 = (line3 as C_DefineLine).replacement
-		Assert.assertEquals(list3.length, 4);
-		Assert.assertEquals(list3.get(0), "test31");
-		Assert.assertEquals(list3.get(1), "test32");
-		Assert.assertEquals(list3.get(2), "test33");
-		Assert.assertEquals(list3.get(3), "test34");
+		var list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 4);
+		var elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test11");
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test12");
+		elem = list.get(2)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test13");
+		elem = list.get(3)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test14");
 
-		var line4 = cfgFile.c_directives.get(3).line
-		Assert.assertTrue(line4 instanceof C_DefineLine)
-		Assert.assertEquals((line4 as C_DefineLine).name, "TEST4");
-		var list4 = (line4 as C_DefineLine).replacement
-		Assert.assertEquals(list4.length, 4);
-		Assert.assertEquals(list4.get(0), "test41");
-		Assert.assertEquals(list4.get(1), "test42");
-		Assert.assertEquals(list4.get(2), "test43");
-		Assert.assertEquals(list4.get(3), "test44");
+		// line 1
+		line = cfgFile.c_directives.get(1).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST2");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 4);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test21");
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test22");
+		elem = list.get(2)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test23");
+		elem = list.get(3)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test24");
+
+		// line 2
+		line = cfgFile.c_directives.get(2).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST3");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 4);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test31");
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test32");
+		elem = list.get(2)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test33");
+		elem = list.get(3)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test34");
+
+		// line 3
+		line = cfgFile.c_directives.get(3).line
+		Assert.assertTrue(line instanceof C_DefineLine)
+		defLine = line as C_DefineLine
+		Assert.assertTrue(defLine.name instanceof C_Identifier)
+		id = defLine.name
+		Assert.assertEquals(id.name, "TEST4");
+
+		list = (line as C_DefineLine).replacement
+		Assert.assertEquals(list.length, 4);
+		elem = list.get(0)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test41");
+		elem = list.get(1)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test42");
+		elem = list.get(2)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test43");
+		elem = list.get(3)
+		Assert.assertTrue(elem instanceof C_Identifier)
+		Assert.assertEquals((elem as C_Identifier).name, "test44");
 	}
 
 	@Test
@@ -731,7 +1047,121 @@ class CfgParsingTest {
 		Assert.assertEquals(api.line.name, "<test1.cfg)>");
 	}
 
+	@Test
+	def void test_1_9_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>); // Test
+		'''.parse
 
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_10_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>); /* Test */
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_11_Include() {
+		val cfgFile = '''
+			INCLUDE(<test1.cfg>); /*
+			                       * Test
+			                       */
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_12_Include() {
+		val cfgFile = '''
+			INCLUDE /* Test */(<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_13_Include() {
+		val cfgFile = '''
+			INCLUDE (/* Test */<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_14_Include() {
+		val cfgFile = '''
+			INCLUDE (<test1.cfg>/* Test */);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+	}
+
+	@Test
+	def void test_1_15_Include() {
+		val cfgFile = '''
+			INCLUDE (<test1.cfg>);
+			// test
+			#include <test1.h>
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
+		Assert.assertEquals((line1 as C_IncludeLine).name, '<test1.h>');
+	}
+
+	@Test
+	def void test_1_16_Include() {
+		val cfgFile = '''
+			#include <test1.h>
+			// test
+			INCLUDE (<test1.cfg>);
+		'''.parse
+
+		val errors = cfgFile.eResource.errors
+		Assert.assertTrue('''Unexpected errors: «errors.join(", ")»''', errors.isEmpty)
+
+		var api = cfgFile.apis.get(0)
+		Assert.assertEquals(api.line.name, "<test1.cfg>");
+		var line1 = cfgFile.c_directives.get(0).line
+		Assert.assertTrue(line1 instanceof C_IncludeLine)
+		Assert.assertEquals((line1 as C_IncludeLine).name, '<test1.h>');
+	}
 
 	@Test
 	def void test_2_1_Include() {
