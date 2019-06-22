@@ -522,7 +522,7 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 0);
 	}
@@ -543,13 +543,13 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 	}
 
 	@Test
@@ -568,17 +568,17 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test2");
+		Assert.assertEquals((elem as C_Identifier).value, "test2");
 	}
 
 	@Test
@@ -597,17 +597,17 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test2");
+		Assert.assertEquals((elem as C_Identifier).value, "test2");
 	}
 
 	@Test
@@ -626,25 +626,25 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test2");
+		Assert.assertEquals((elem as C_Identifier).value, "test2");
 
 		elem = list.get(2)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test3");
+		Assert.assertEquals((elem as C_Identifier).value, "test3");
 
 		elem = list.get(3)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test4");
+		Assert.assertEquals((elem as C_Identifier).value, "test4");
 	}
 
 	@Test
@@ -665,26 +665,26 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 
 		line = cfgFile.c_directives.get(1).line
 		Assert.assertTrue(line instanceof C_DefineLine)
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST2");
+		Assert.assertEquals(id.value, "TEST2");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test2");
+		Assert.assertEquals((elem as C_Identifier).value, "test2");
 	}
 
 	@Test
@@ -705,33 +705,33 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test11");
+		Assert.assertEquals((elem as C_Identifier).value, "test11");
 
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test12");
+		Assert.assertEquals((elem as C_Identifier).value, "test12");
 
 		line = cfgFile.c_directives.get(1).line
 		Assert.assertTrue(line instanceof C_DefineLine)
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST2");
+		Assert.assertEquals(id.value, "TEST2");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 2);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test21");
+		Assert.assertEquals((elem as C_Identifier).value, "test21");
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test22");
+		Assert.assertEquals((elem as C_Identifier).value, "test22");
 	}
 
 	@Test
@@ -755,13 +755,13 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test1");
+		Assert.assertEquals((elem as C_Identifier).value, "test1");
 
 		// line 1
 		line = cfgFile.c_directives.get(1).line
@@ -769,13 +769,13 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST2");
+		Assert.assertEquals(id.value, "TEST2");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test2");
+		Assert.assertEquals((elem as C_Identifier).value, "test2");
 
 		// line 2
 		line = cfgFile.c_directives.get(2).line
@@ -783,13 +783,13 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST3");
+		Assert.assertEquals(id.value, "TEST3");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test3");
+		Assert.assertEquals((elem as C_Identifier).value, "test3");
 
 		// line 3
 		line = cfgFile.c_directives.get(3).line
@@ -797,13 +797,13 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST4");
+		Assert.assertEquals(id.value, "TEST4");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 1);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test4");
+		Assert.assertEquals((elem as C_Identifier).value, "test4");
 	}
 
 	@Test
@@ -827,22 +827,22 @@ class CfgParsingTest {
 		var defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		var id = defLine.name
-		Assert.assertEquals(id.name, "TEST1");
+		Assert.assertEquals(id.value, "TEST1");
 
 		var list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
 		var elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test11");
+		Assert.assertEquals((elem as C_Identifier).value, "test11");
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test12");
+		Assert.assertEquals((elem as C_Identifier).value, "test12");
 		elem = list.get(2)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test13");
+		Assert.assertEquals((elem as C_Identifier).value, "test13");
 		elem = list.get(3)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test14");
+		Assert.assertEquals((elem as C_Identifier).value, "test14");
 
 		// line 1
 		line = cfgFile.c_directives.get(1).line
@@ -850,22 +850,22 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST2");
+		Assert.assertEquals(id.value, "TEST2");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test21");
+		Assert.assertEquals((elem as C_Identifier).value, "test21");
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test22");
+		Assert.assertEquals((elem as C_Identifier).value, "test22");
 		elem = list.get(2)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test23");
+		Assert.assertEquals((elem as C_Identifier).value, "test23");
 		elem = list.get(3)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test24");
+		Assert.assertEquals((elem as C_Identifier).value, "test24");
 
 		// line 2
 		line = cfgFile.c_directives.get(2).line
@@ -873,22 +873,22 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST3");
+		Assert.assertEquals(id.value, "TEST3");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test31");
+		Assert.assertEquals((elem as C_Identifier).value, "test31");
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test32");
+		Assert.assertEquals((elem as C_Identifier).value, "test32");
 		elem = list.get(2)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test33");
+		Assert.assertEquals((elem as C_Identifier).value, "test33");
 		elem = list.get(3)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test34");
+		Assert.assertEquals((elem as C_Identifier).value, "test34");
 
 		// line 3
 		line = cfgFile.c_directives.get(3).line
@@ -896,22 +896,22 @@ class CfgParsingTest {
 		defLine = line as C_DefineLine
 		Assert.assertTrue(defLine.name instanceof C_Identifier)
 		id = defLine.name
-		Assert.assertEquals(id.name, "TEST4");
+		Assert.assertEquals(id.value, "TEST4");
 
 		list = (line as C_DefineLine).replacement
 		Assert.assertEquals(list.length, 4);
 		elem = list.get(0)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test41");
+		Assert.assertEquals((elem as C_Identifier).value, "test41");
 		elem = list.get(1)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test42");
+		Assert.assertEquals((elem as C_Identifier).value, "test42");
 		elem = list.get(2)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test43");
+		Assert.assertEquals((elem as C_Identifier).value, "test43");
 		elem = list.get(3)
 		Assert.assertTrue(elem instanceof C_Identifier)
-		Assert.assertEquals((elem as C_Identifier).name, "test44");
+		Assert.assertEquals((elem as C_Identifier).value, "test44");
 	}
 
 	@Test

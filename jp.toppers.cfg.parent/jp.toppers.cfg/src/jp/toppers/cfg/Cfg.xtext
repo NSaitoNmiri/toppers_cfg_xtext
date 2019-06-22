@@ -52,7 +52,7 @@ C_PpToken:
 ;
 
 C_Identifier:
-	{C_Identifier} name=C_ID;
+	{C_Identifier} value=C_ID;
 
 terminal C_ID: // implementation-defined characters are not support
 	C_NONDIGIT (C_NONDIGIT | C_DIGIT)* ;
